@@ -1,0 +1,20 @@
+\chapter{Introdução}\label{chap:introducao}
+A necessidade de persistência de dados sempre esteve presente na computação. A medida que os sistemas evoluíram a complexidade da forma que os dados eram armazenados aumentou significativamente. Com isso houve a necessidade da criação de um sistema computadorizado de manutenção de registros \cite{CJDate}, o banco de dados.
+
+O modelo relacional foi um dos primeiros gêneros de banco de dados, sua estrutura são tabelas de duas dimensões com linhas e colunas. Os dados armazenados são tipados podendo variar a quantidade de tipos de acordo com o banco utilizado. Para interagir com esse gênero de banco é necessário realizar consultas com a linguagem SQL. Alguns exemplos de banco de dados relacional são MySQL, SQLite, Oracle e PostgreSQL.
+
+Durante anos, o banco de dados relacional tinha sido considerado a melhor opção para os problemas de pequena e grande escalabilidade, porém surgiram novas soluções com novas alternativas de estruturas, replicação simples, alta disponibilidade e novos métodos de consultas \cite{SDSW}. Essas opções são conhecidas como NoSQL ou banco de dados não-relacional.
+
+Existem diversos gêneros de banco de dados não-relacional, entre eles chave-valor, orientado à documento, orientado à coluna e orientado à nó. Com o surgimento dessas novas soluções, o questionamento sobre qual banco de dados é melhor para resolver certo tipo de problema, veio à tona. A partir disso, o conhecimento e compreensão sobre os bancos de dados em geral se torna necessário para realizar uma boa escolha.
+
+Entendendo que cada banco se destaca em determinados tipos de problema, é nítido perceber que sistemas que trabalham com mais de um banco de dados podem oferecer uma melhor performance, dando origem à persistência poliglota.
+
+Este trabalho consiste na comparação de dois sistemas, o primeiro um que utilizará apenas um banco de dados e o segundo que utilizará dois bancos de dados ou persistência poliglota. Os bancos escolhidos para fazer esses sistemas foram o MongoDB e o Redis. O autor escolheu esses bancos de dados por ter experiência na linguagem \textit{Ruby on Rails} que oferece excelentes bibliotecas para esses bancos.
+
+MongoDB é um banco de dados do gênero orientado à documento e foi desenhado para ser gigante, como o próprio nome é uma derivação da palavra inglesa \textit{humongous} que significa gigantesco. Além disso, tem soluções interessantes para evitar leitura suja e as consultas são realizadas na linguagem JavaScript. A diferença desse genêro é que são armazenados documentos compostos de um identificador único e um conjunto de valores de tipos e estruturas aninhadas, chamadas de BSON, uma estrutura parecida com JSON. Esse gênero é bem flexível, pois não tem \textit{schema}, ou seja, não existe tabelas. A organização dos dados é feito por documentos, ao criar a arquitetura do sistema temos que identificar se as entidades criadas são expressivas como um documento \cite{SDSW}. Nesse trabalho iremos utilizar o banco MongoDB nos dois sistemas que serão criados.
+
+O segundo banco que iremos utilizar se chama Remote Dictionary Server ou Redis do gênero chave-valor. Esse tipo de armazenamento é mais simples, como próprio nome indica, é armazenado um valor para determinada chave. Essa escolha foi feita devido ao cache que esse sistema realiza antes de efetivar a operação no disco. Esse cache tem um ganho muito alto em performance, porém poderá ocorrer perda de dados, caso ocorra uma falha de hardware \cite{SDSW}. A forma de como estruturar esse banco é muito parecida com um tipo estruturado chamado \textit{hash} que são implementadas em algumas linguagens de computação, como Java e Ruby. Esse banco será utilizado no segundo sistema a ser desenvolvido.
+
+\section{Motivação}
+\label{sec:motivacao}
+A persistência poliglota é uma alternativa para melhorar o desempenho de uma aplicação. Utilizando-a conseguimos adaptar cada tipo de problema com um gênero de banco.  Em uma mesma aplicação podemos ter um conjunto dados que devem estar sempre disponíveis e em outra parte da aplicação um conjunto de dados que devem ser consistentes.
