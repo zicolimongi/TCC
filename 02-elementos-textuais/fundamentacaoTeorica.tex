@@ -1,105 +1,71 @@
-%
-% Documento: Fundamentação Teórica
-%
-
 \chapter{Fundamentação Teórica}
 \label{chap:fundamentacaoTeorica}
 
-Para entendermos o porquê de utilizar mais de um banco de dados, temos que entender o que é um banco de dados, quais gêneros existem e para que tipo de problema cada gênero se destaca.
 
+Para entendermos o porquê de utilizar mais de um banco de dados em uma mesma aplicação, temos que entender o que é um banco de dados, quais gêneros existem e para que tipo de problema cada gênero se destaca.
 
 \section{Banco de Dados}
 \label{sec:database}
 
-Banco de dados é um sistema computadorizado de manutenção de registros \cite{CJDate}. Elmasri \cite{Elmasri} acredita que o uso do computador tem aumentado significativamente por causa dos bancos de dados e ainda afirma, que eles representam um papel crucial em quase todas as áreas que envolve computação.
+Banco de dados é um sistema computadorizado de manutenção de registros, análogo à um armário de arquivamento eletrônico. Podemos entender como um repositório para manter a coleção de arquivos de dados computadorizados \cite[p.3]{CJDate}. \citeonline[p.4]{Elmasri} define banco de dados como uma coleção de dados relacionados e que dados são fatos com um significado implícito. Porém a definição de \citeonline[p.4]{Elmasri} é muito abrangente, logo ele aponta três propriedades implícitas para restringir a definição de banco de dados.
 
-Devido a essa importância da persistência dos dados Elmasri apresenta as principais características de uma abordagem que utiliza processamento de arquivos \textit{versus} a abordagem que utiliza o banco de dados. Essas características são: natureza autodescritiva do sistema de banco de dados, isolamento entre os programas e dados e abstração de dados, suporte para as múltiplas visões de dados e por fim compartilhamento de dados e processamento de transações de multiusuários.
+A primeira propriedade é que um banco de dados deve representar alguns aspectos do mundo real, chamado de \textit{universo de discurso (UoD)}. As alterações que ocorrem nesse universo são refletidas em um banco de dados.
 
-Elmasri compara a natureza autodescritiva das duas abordagens afirmando que ao utilizar a abordagem do banco de dados é possível identificar a estrutura dos arquivos, formato e tipo de dados apenas acessando o catálogo do banco de dados. Já na abordagem utilizando o processamento tradicional dos arquivos essas definições de estrutura estarão no próprio programa da aplicação. Então esses dados poderão ser acessados apenas por esse programa, dificultando que um programa em outra linguagem leia, ou escreva esses dados.
+A segunda propriedade define que o banco de dados é uma coleção lógica e coerente de dados com algum significado inerente, ou seja, uma coleção de dados randômicos não pode ser considerado um banco de dados.
 
-Elmasri não cita a existência de bancos de dados sem catálogo, chamados de \textit{schemaless}. Apesar de não ter a declaração do tipo de estruturas de dados contidas no banco, os bancos de dados \textit{schemaless} faz a abstração dos dados da mesma maneira que os bancos de dados tradicionais.
+A terceira propriedade afirma que banco de dados é projetado, construído e povoado com dados, atendendo a uma proposta específica. Além disso, possui um grupo de usuários definido e algumas aplicações preconcebidas, de acordo com o interesse desse grupo.
 
-Como identificado por Elsmari a abastração de dados não é feito no processamento tradicional de arquivos. Suponha que tenhamos diversos programas utilizando o mesmo arquivo para armazenar um tipo de dado. Se um desses programas precisar de acrescentar algum campo novo, todos os outros programas que acessam esse arquivo devem modificados para contemplar o no campo adicionado.
-Já quando utilizamos a abordagem de banco de dados, a alteração da estrutura dos dados pode não influenciar no funcionamento dos outros programas.
+Os bancos de dados tem contribuído para o aumento do uso do computador \cite[p.3]{Elmasri} e podemos afirmar que eles apresentam um papel crucial em quase todas as áreas em que os computadores são utilizados. Devido a essa importância o estudo sobre banco de dados é extremamente necessário para os profissionais da computação.
 
-Em relação a característica, suporte para múltiplas visões dos dados, Elsmari afirma que quando é utilizado o banco de dados, é possível ter diferentes visões sobre os dados, fazendo o cruzamento das informações. Com a abordagem de processamento de arquivo tradicional isso não é usual.
+Antes da existência dos bancos de dados a aplicação devia gerenciar e processar arquivos para manter os dados persistidos. Para justificar o uso do banco de dados, \citeonline[p.7]{Elmasri} cita quatro características: natureza autodescritiva, abstração de dados, suporte para as múltiplas visões de dados e por fim compartilhamento de dados e processamento de transações de multiusuários.
+
+O banco de dados, relacional, é autodescritivo devido ao catálogo que permite identificar a estrutura dos arquivos, formato e tipo de dados. Já  ao utilizar o processamento tradicional dos arquivos essas definições de estrutura estarão na própria aplicação. Isso dificulta outro programa utilizar a mesma base de dados.
+
+Como identificado por \citeonline[p.7]{Elmasri} a abstração de dados não é feita no processamento tradicional de arquivos. A aplicação define a estrutura de dados. Suponha que tenhamos diversos programas utilizando o mesmo arquivo para armazenar uma coleção de dados. Se um desses programas precisar de acrescentar algum campo novo, todos os outros programas que acessam esse arquivo, devem modificados para contemplar o novo campo adicionado. Já quando utilizamos banco de dados, a alteração da estrutura dos dados pode não influenciar no funcionamento dos outros programas.
+
+Em relação a característica, suporte para múltiplas visões dos dados, \citeonline[p.7]{Elmasri} afirma que quando é utilizado o banco de dados, é possível ter diferentes visões sobre os dados, fazendo o cruzamento das informações. Com a abordagem de processamento de arquivo tradicional isso não é usual.
+
+A última característica comparada por \citeonline[p.7]{Elmasri} é o compartilhamento de dados e o processamento de transação multiusuários, essa característica é essencial para que várias aplicações possam acessar e alterar os dados. Porém o sistema de gerenciamento do banco de dados deve ter implementado um controle de concorrência para garantir a atomicidade das transações.
+
+\citeonline{Elmasri} não cita a existência de bancos de dados sem catálogo, chamados de \textit{schemaless}. Apesar de não ter a declaração do tipo de estruturas de dados contidas no banco, os bancos de dados \textit{schemaless} faz a abstração dos dados da mesma maneira que os bancos de dados tradicionais, tem suporte para múltipla visões e multiusuários.
+
+Como revelado acima a utilização do banco de dados, facilita o desenvolvimento das aplicações, faz a abstração entre aplicação e dados e além disso faz o controle de concorrência. Após verificarmos que o uso de banco de dados é imprescindível, nos deparamos com uma outra dificuldade, qual banco de dados utilizar. Os bancos de dados, chamados de NoSQL, chamou a atenção da comunidade científica, depois da publicação de dois artigos \citeonline{bigtable} e \citeonline{dynamo}
+
+\section{Gêneros de Banco de dados}
+\label{sec:databasetype}
+Durante anos, o banco de dados relacional tinha sido considerado a melhor opção para a maioria dos problemas sendo de pequena ou grande escalabilidade. O aumento do volume de dados fizeram com que os especialistas buscassem novas soluções que permitissem o armazenamento distribuído dos bancos de dados e que fossem mais eficazes e simples que o relacional \cite{NoSQL}.
+
+Com isso surgiram novos gêneros de banco de dados que foram denominados de NoSQL. Carlo Strozzi foi o primeiro a utilizar o nome NoSQL, mas não no sentido que a palavra tem hoje. Strozzi denominou um banco de dados relacional, open source de NoSQL, pois não usava SQL como linguagem de consulta. O nome, era de uma conferência, realizada em São Francisco nos Estados Unidos em Junho de 2009. Johan Oskarsson que organizou essa conferência escolheu esse nome porque queria que fosse uma boa hashtag no Twitter: pequeno, memorável e tivesse poucos resultados no Google. Isso facilitaria os interessados a encontrar a conferência. Apesar de o termo não significar explicitamente o que são esses bancos de dados atendeu bem a intenção de Oskarsson. Os bancos chamados de NoSQL tem em comum: não usar o modelo relacional, funciona bem em clusters, são open source e não tem catálagos (\textit{schemaless}) \cite{NoSQL}.
 
 
-A última característica comparada por Elmasri é o compartilhamento de dados e o processamento de transação multiusuários, essa característica é essencial para que várias aplicações possam acessar e alterar os dados. Porém o sistema de gerenciamento do banco de dados deve ter implementado um controle de concorrência para garantir a atomicidade das transações.
+\subsection{Banco de dados Relacional}
+\label{subsec:relationaldatabasetype}
+O modelo relacional é o mais comum atualmente, esse gênero armazena os dados em tabelas de duas dimensões, linhas e colunas. A interação com esse banco é feito por um SGBD (Sistema de Gerenciamento de Banco de Dados) que utiliza o SQL como linguagem de consulta de dados. Os dados armazenados são valores tipados e podem ser numéricos, texto, data e outros tipos, que são configurados e forçados pelo sistema. A grande vantagem do modelo relacional é a facilidade que pode ser feito as consultas. É possível fazer relações entre tabelas, que se transformam em outras tabelas mais complexas. MySQL, H2, HSQLDB, SQLite e PostgreSQL são alguns exemplos de banco de dados relacional \cite{SDSW}.
+A representação do modelo relacional, normalmente é feito com o diagrama de entidade relacionamento, como pode ser visto na figura 1 e a forma que os valores ficam armazenados nas tabelas, pode ser visto na figura 2.
 
-Como revelado acima a utilização do banco de dados, facilita o desenvolvimento das aplicações, faz a abstração entre aplicação e dados e além disso faz o controle de concorrência.
+O gênero relacional funciona muito bem para diversas aplicações, pois é bem flexível em relação as consultas, permite concorrência, transações e pode ser integrado com várias aplicações. Porém há uma desvantagem que causa frustação em muitos desenvolvedores, chamada de Impedância de correspondência ou \textit{Impedance MIsmatch}. Isso ocorre, pois nem sempre o tipo do campo no banco de dados irá corresponder com o tipo esperado da linguagem utilizada, então é necessário criar uma forma de associação entre o tipo da variável da linguagem com o tipo do valor da tabela. Outra desvantagem é que esse gênero não aceita valores multivalorados, diferenciando a aplicação ainda mais do modelo relacional.
 
-\section{Figuras}
-\label{sec:figuras}
 
-Abaixo é apresentado um exemplo de figura.
-A \autoref{fig:kdtree} aparece automaticamente na lista de figuras.
-Para uso avançado de imagens no LATEX, recomenda-se a consulta de literatura especializada \cite{Goossens2007}.
+\subsection{Banco de dados não relacional}
+\label{subsec:nosqldatabasetype}
+Os bancos de dados não relacional ou NoSQL, foram construídos para suprir a necessidade de se trabalhar com grande quantidade de dados e em clusters. Também podemos dizer que o resultado mais importante do crescimento do NoSQL é a presistência poliglota \cite{NoSQL}.
 
-\begin{figure}[!htb]
-    \centering
-    \caption{Exemplo da estrutura de uma árvore KD}
-    \includegraphics[width=0.3\textwidth]{./04-figuras/figkdtree}
-    \fonte{\citeonline{CELSO2012}}
-    \label{fig:kdtree}
-\end{figure}
+Uma das principais diferenças desse tipo de banco sobre o relacional é que permite agregação
 
-\section{Quadros e Tabelas}
-\label{sec:tabelas}
+\subsubsection{MongoDB}
+\label{subsubsec:mongodatabasetype}
 
-Também é apresentado o exemplo do \autoref{qua:comparabd} e da \autoref{tab:correlacao}, que aparece automaticamente na lista de quadros e tabelas.
-Informações sobre a construção de tabelas no LATEX podem ser encontradas na literatura especializada \cite{Lamport1986,Buerger1989,Kopka2003,Mittelbach2004}.
+Falar do mongo, basear na documentação para explicar como funciona as relacoes e citar alguns estudo de caso do site
 
-\input{./06-quadros/quacomparabd}
 
-Muitos confundem, mas existe diferença entre tabelas e quadros.
-Um quadro é formado por linhas horizontais e verticais,
-sendo, portanto ``fechado''. Normalmente é usado
-para apresentar dados secundários. Nada impede, porém,
-que um quadro apresente resultados da pesquisa.
-Um quadro normalmente apresenta resultados
-qualitativos (textos). O número do quadro e o título
-vêm acima do quadro, e a fonte, deve vir abaixo.
-Uma tabela é formada apenas por linhas verticais, sendo,
-portanto ``aberta''. Normalmente é usada para
-apresentar dados primários, e geralmente vem nos
-``resultados'' e na discussão do trabalho. Nada
-impede, porém, que uma tabela seja usada no
-referencial teórico de um trabalho. Uma tabela
-normalmente apresenta resultados quantitativos
-(números). O número da tabela e o título vêm
-acima da tabela, e a fonte, deve vir abaixo, como
-no quadro.
+\subsubsection{Redis}
+\label{subsubsec:redisdatabasetype}
 
-Exemplos de tabelas:
-
-\input{./05-tabelas/tabcorrelacao}
-
-\input{./05-tabelas/tabteste}
-
-\section{Equações}
-\label{sec:equacoes}
-
-A transformada de Laplace é dada na \autoref{eq:laplace}, enquanto a \autoref{eq:dft} apresenta a formulação da transformada discreta de Fourier bidimensional\footnote{Deve-se reparar na formatação esteticamente perfeita destas equações.}.
-
-\begin{equation}
-    X(s) = \int\limits_{t = -\infty}^{\infty} x(t) \, \text{e}^{-st} \, dt
-    \label{eq:laplace}
-\end{equation}
-
-\begin{equation}
-    F(u, v) = \sum_{m = 0}^{M - 1} \sum_{n = 0}^{N - 1} f(m, n) \exp \left[ -j 2 \pi \left( \frac{u m}{M} + \frac{v n}{N} \right) \right]
-    \label{eq:dft}
-\end{equation}
-
-\section{Algoritmos}\label{sec:algoritmos}
-
-Os algoritmos devem ser feitos segundo o modelo abaixo.
-Para isso, utilizar o pacote {\ttfamily algorithm2e} no início do arquivo principal como neste exemplo.
-O \autoref{alg:vertices} mostra um exemplo.
-
-\input{./07-algoritmos/vertices}
+Falar do redis, basear no NoSQL e SDSW, mostrar alguns estudos de casos que estao no site
 
 
 
+\section{Persistência Poliglota}
+\label{sec:polyglotpersitence}
+Utilizar o NoSQL como base e fazer a comparaçao com o artigo de paradigma de programação
 
