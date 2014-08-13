@@ -26,7 +26,7 @@ A última característica citada por \citeonline{Elmasri} é o processamento de 
 
 \citeonline{Elmasri} não cita a existência de bancos de dados sem catálogo, chamados de \textit{schemaless}. Apesar de não ter a declaração do tipo de estruturas de dados contidas no banco, os bancos de dados \textit{schemaless} fazem a abstração dos dados da mesma maneira que os bancos de dados tradicionais, têm suporte para múltipla visões e multiusuários.
 
-Como revelado acima, a utilização do banco de dados facilita o desenvolvimento das aplicações, faz a abstração entre aplicação e dados e, além disso, faz o controle de concorrência. Após verificarmos que o uso de banco de dados é imprescindível, nos deparamos com uma outra dificuldade, qual banco de dados utilizar. Os bancos de dados, chamados de NoSQL, chama a atenção da comunidade científica, depois da publicação de dois artigos \citeonline{bigtable} e \citeonline{dynamo}
+Como revelado acima, a utilização do banco de dados facilita o desenvolvimento das aplicações, faz a abstração entre aplicação e dados e, além disso, faz o controle de concorrência. Após verificarmos que o uso de banco de dados é imprescindível, nos deparamos com uma outra dificuldade, qual banco de dados utilizar. Os bancos de dados, chamados de NoSQL, chama a atenção da comunidade científica, depois da publicação de dois artigos BigTable \cite{bigtable} e Dynamo \cite{dynamo}
 
 \section{Gêneros de Banco de dados}
 \label{sec:databasetype}
@@ -42,14 +42,14 @@ A representação do modelo relacional, pode ser feita com o diagrama \ac{UML}. 
 \begin{figure}[!htb]
     \centering
     \caption{Exemplo de um diagrama \ac{UML} para o modelo relacional}
-    \includegraphics[width=\textwidth]{./04-figuras/diagrama_sql_uml.jpg}
+    \includegraphics[width=0.8\textwidth]{./04-figuras/diagrama_sql_uml.jpg}
     \fonte{\cite{NoSQL}}
     \label{fig:diagrama_sql_uml}
 \end{figure}
 \begin{figure}[!htb]
     \centering
     \caption{Exemplo da disposição dos dados no modelo relacional}
-    \includegraphics[width=\textwidth]{./04-figuras/disposicao_dados_tabela.png}
+    \includegraphics[width=0.8\textwidth]{./04-figuras/disposicao_dados_tabela.png}
     \fonte{\cite{NoSQL}}
     \label{fig:disposicao_tabela}
 \end{figure}
@@ -58,31 +58,74 @@ A representação do modelo relacional, pode ser feita com o diagrama \ac{UML}. 
 O gênero relacional funciona muito bem para diversas aplicações, pois é bem flexível em relação às consultas, permite concorrência, transações e pode ser integrado com várias aplicações. Porém, há uma desvantagem que causa frustação em muitos desenvolvedores, chamada de Impedância de Correspondência ou \textit{Impedance Mismatch}. Isso ocorre, pois nem sempre o tipo do campo no banco de dados irá corresponder com o tipo esperado da linguagem utilizada, então é necessário criar uma forma de associação entre o tipo da variável da linguagem com o tipo do valor da tabela. Outra desvantagem é que esse gênero não aceita valores multivalorados, distanciando a aplicação ainda mais do modelo relacional.
 
 
-\subsection{Banco de dados não relacional}
+\subsection{Banco de dados não-relacional}
 \label{subsec:nosqldatabasetype}
 Os bancos de dados NoSQL, foram construídos para suprir a necessidade de se trabalhar com grande quantidade de dados e em \textit{clusters}. NoSQL abrange diversos gêneros de banco de dados, entre eles o orientado a documento, chave-valor, orientado a coluna e orientado a nó.
 
-Todos esses gêneros não possuem catálogo, ou seja, não é definido previamente qual estrutura dos dados que serão armazenados. Isso deixa o sistema mais flexível e permite que a estrutura dos dados seja facilmente alterada. É possível adicionar um novo campo, sem ter que preocupar com qual valor colocar para a base legada, pois os objetos de uma mesma coleção podem ter diferentes campos. Da mesma maneira, para remover um campo, basta parar de armazená-lo, pois os registros antigos, que tinha esse campo, continuarão com eles, e os objetos novos não irão armazenar esse campo que já não faz parte da aplicação \cite{NoSQL}.
+Todos esses gêneros não possuem catálogo, ou seja, não é definido previamente qual estrutura os dados serão armazenados. Isso permite uma flexibilidade no sistema, pois a estrutura dos dados pode ser alterada facilmente. É possível adicionar um novo campo, sem ter que preocupar com qual valor colocar para a base legada, pois os objetos de uma mesma coleção podem ter diferentes campos. Da mesma maneira, para remover um campo, basta parar de armazená-lo, pois os registros antigos, que tinham esse campo continuarão com eles, e os objetos novos não irão armazenar esse campo, que já não faz parte da aplicação \cite{NoSQL}.
 
-Com isso é possível trabalhar com dados não uniformes: são dados que para cada registro há um conjunto diferente de atributos. Para que o banco de dados relacional lide objeto dessa natureza, seria necessário uma tabela com os campos de todos os objetos e consequentemente, isso traria uma quantidade grande de campos vazios.
+Com isso é possível trabalhar com dados não uniformes: são dados que para cada registro há um conjunto diferente de atributos. Para que o banco de dados relacional lide com um objeto dessa natureza, é necessário uma tabela com os campos de todos os objetos e consequentemente, isso traria uma quantidade grande de campos vazios.
 
-Basicamente os banco de dados NoSQL deslocam a definição do esquema para a aplicação que acessa o banco. Isso pode se tornar problemático quando há muitas aplicações acessando o mesmo banco, mas existem soluções para resolver isso, como encapsular toda a interação com o banco de dados, fazendo esse funcionar como um \textit{web service}.
+Basicamente os banco de dados NoSQL deslocam a definição do esquema para a aplicação que acessa o banco. Isso pode se tornar problemático quando há muitas aplicações acessando o mesmo banco, mas existem soluções para resolver isso, como encapsular toda a interação com o banco de dados, fazendo esse funcionar como um \textit{web service} \cite{NoSQL}.
+
+Além dessa flexibilidade, a maioria dos gêneros NoSQL permitem estruturar dados multivalorados \footnote{O banco de dados orientado a nó, é um dos gêneros que não implementam agregação.}. Esses dados são modeladas como uma agregação, que é uma coleção de objetos relacionados que desejamos tratar como um único objeto \cite{domain-driven}. A agregação facilita a manipulação e a consistência desses dados, pois é tratado com uma unidade, ou seja, é lido e escrito, sempre, todo o conjunto de dados. Como, geralmente, ao utilizar esse relacionamento buscamos operações atomicas, essa abordagem se encaixa perfeitamente com a aplicação \cite{NoSQL}. A modelagem em \ac{UML} do mesmo exemplo anterior utilizando agregação, ficaria como a \autoref{fig:diagrama_no_sql_uml_simples} e a disposição de dados ficaria como a \autoref{fig:disposicao_json_simples} \footnote{É usual a utilização de JSON para mostrar os dados em NoSQL \cite{NoSQL}}.
+
+\begin{figure}[!htb]
+    \centering
+    \caption{Exemplo de um diagrama \ac{UML} utilizando agregação}
+    \includegraphics[width=0.8\textwidth]{./04-figuras/diagrama_no_sql_uml_simples.jpg}
+    \fonte{\cite{NoSQL}}
+    \label{fig:diagrama_sql_uml}
+\end{figure}
+\begin{figure}[!htb]
+    \centering
+    \caption{Exemplo da disposição dos dados utilizando agregação}
+    \includegraphics[width=0.8\textwidth]{./04-figuras/disposicao_json_simples.png}
+    \fonte{\cite{NoSQL}}
+    \label{fig:disposicao_tabela}
+\end{figure}
 
 
-Também podemos dizer que o resultado mais importante do crescimento do NoSQL é a presistência poliglota \cite{NoSQL}.
 
+Nesse modelo, utilizamos duas agregações principais: cliente e pedido. O cliente contém uma lista de endereços, o pedido contém uma lista de itens de pedido, endereços e pagamentos. E por fim, o pagamento contém uma lista de endereços. Endereço aparece três vezes, mas ao invés de utilizar uma referência com um identificador, como no modelo relacional, o valor é copiado. Essa replicação de dados se adequa ao problema, pois nesse caso não queremos que o endereço em pagamento, ou em pedido seja alterado caso o cliente atualize a própria lista.  Utilizando o modelo relacional temos duas maneiras de lidar com o problema. A primeira, tratar para que não seja permitido alterar o endereço, após desse ser vinculado à pedido ou pagamento. A segunda e mais usada, seria duplicar o endereço e associar à pedido ou à pagamento.
 
-O banco de dados orientado a documento
-Agregação é uma coleção de objetos relacionados, que desejamos que seja tratado como uma unidade \cite{NoSQL}. Usando a agregação é possível armazenar atributos multivalorados. Normalmente desejamos que as operações de atualização sobre as agregações sejam atômicas.
-Utilizando o mesmo exemplo de \textit{e-commerce} a cima o modelo UML para um banco de dados que permite a agregação seria como a figura 1 e a disposição desses dados seria como a figura
+A ligação entre pedido e cliente é uma relação que ocorre da mesma maneira que o modelo relacional. O pedido mantém um identificador do cliente, mas também tem como utilizar a agregação para essa relação. O modelo em \ac{UML} ficaria como a \autoref{fig:diagrama_no_sql_uml_duplo} e os dados ficariam dispostos como a \autoref{fig:disposicao_json_duplo}.
 
-Falar do mongo, basear na documentação para explicar como funciona as relacoes e citar alguns estudo de caso do site
+\begin{figure}[!htb]
+    \centering
+    \caption{Exemplo de um diagrama \ac{UML} para utilizando agregação entre cliente e pedido}
+    \includegraphics[width=0.8\textwidth]{./04-figuras/diagrama_no_sql_uml_duplo.jpg}
+    \fonte{\cite{NoSQL}}
+    \label{fig:diagrama_sql_uml}
+\end{figure}
+\begin{figure}[!htb]
+    \centering
+    \caption{Exemplo da disposição dos dados no NoSQL, utilizando agregação entre cliente e pedido}
+    \includegraphics[width=0.8\textwidth]{./04-figuras/disposicao_json_duplo.png}
+    \fonte{\cite{NoSQL}}
+    \label{fig:disposicao_tabela}
+\end{figure}
 
+Como na maioria dos problemas de modelamento não existe a melhor solução, mas sim uma que se adequa melhor para um certo tipo de problema, depende completamente da natureza da aplicação. Se for interessante para a aplicação listar o histórico dos pedidos, o segundo modelo, utilizando NoSQL, não é o ideal, pois será necessário entrar em cada usuário para ler os pedidos. Já no primeiro modelo, utilizando NoSQL, essa consulta do histótico se torna trivial \cite{NoSQL}.
 
-Falar do redis, basear no NoSQL e SDSW, mostrar alguns estudos de casos que estao no site
+Outra razão para utilizar agregação é que isso facilita o uso do banco de dados em \textit{clusters}, pois isso informa ao sistema, quais \textit{bits} dos dados devem ser manipulados juntos e se devem estar no mesmo nó do \{cluster}.
 
+O modelo relacional por não tratar o conceito de agregação é chamado de \textit{aggregate-ignorant}. Apesar dessas vantagens apresentadas sobre agregação, o modelo relacional tem suas vantanges por não tratar. A principal é que ao utilizar o modelo relacional, podemos analisar os dados em diversas perspectivas, já no banco de dados NoSQL algumas consultas podem não ser triviais ou até mesmo mais lentas.
 
+Outra desvantagem do NoSQL, é não implementar transações \ac{ACID} sobre várias agregações. Esses gêneros de banco de dados conseguem implementar essas transações apenas sobre uma agregação como dito anteriormente. Caso seja necessário o controle dessas transações, deverá ser feito no código da aplicação.
+
+O objeto desse trabalho são duas aplicações que irão utilizar dois gêneros de banco de dados, orientado a documento e chave-valor.
+
+O gênero chave-valor funciona como uma simples tabela \textit{hash} que dado uma chave única encontrará um valor. O sistema desse banco não tem conhecimento algum sobre esse valor, logo poderá ser um texto, um objeto multivalorado, um valor binário, qualquer tipo de informação, apenas o tamanho é limitado, dependendo do banco. Alguns exemplos de bancos desse gênero são: \ac{Redis}\footnote{Sítio oficial do Redis \url{http://redis.io/}} e Riak\footnote{Sítio oficial do Riak \url{http://basho.com/riak/}}
+A consistência utilizando esse gênero existe apenas para operação realizada com uma chave. Então não temos consistência para um grupo de chaves, isso pode ser implementado, mas é muito custoso \cite{NoSQL}. Em relação a consistência, no ambiente paralelo, cada banco implementa de uma maneira. O Riak, por exemplo, utiliza o chamado \textit{Quorums}, que é uma abordagem de consistência que elege o valor mais atual fazendo uma consulta entre os nós. Aquele valor, que tiver na maioria dos nós, será eleito como mais atualizado.
+A consulta sobre os valores é feita apenas buscando a chave, qualquer outro filtro necessário, deverá ser feito pela aplicação, após ler todo o valor retornado. Também é possível programar o tempo de expiração da chave. Essa maneira que o banco chave-valor trabalha o faz com que ele se adeque bem para manter dados da sessão de um usuário, carrinhos de compra de um \textit{e-commerce}, perfil de usuários e outros. Não é indicado para armazenar valores que precisam ser filtrados.
+
+O gênero orientado a documento se trabalha com o conceito de documento. Documento pode ser um \ac{XML}, JSON, BSON ou outros formatos. Esses documentos são armazenados em coleções. Documentos da mesma coleção são semelhantes, mas podem não ser idênticos. Se fizermos uma analogia, a coleção seria a tabela no modelo relacional e o documento seria a tupla no modelo relacional. Exemplo desse gênero são MongoDB \footnote{Sítio oficial do MongoDB \url{http://www.mongodb.com/}} e CouchDB \footnote{Sítio oficial do CouchDB \url{http://couchdb.apache.org/}}\cite{NoSQL}.
+Existem dois tipos de relacionamento, um que funciona semelhante ao modelo relacional que é referenciando um documento de uma coleção pelo identificador, análogo a chave estrangeira no modelo relacional . A outra maneira é embutir documentos dentro de um documento, ou seja, agregação. Consistência existe apenas para os objetos da agregação como relatado anteriormente. Quando distribuído, o MongoDB pode trabalhar com um série de políticas que são configuráveis. Esse gênero não implementa transações(operações de inserir, atualizar ou deletar com a opção de fazer o \textit{commit} ou \textit{rollback}). O MongoDB permite que seja feito consultas, a linguagem utilizada é o JavaScript. Consultas mais complexas que utilizam os documentos embutidos em outros documentos são realizadas com \textit{MapReduce} \cite{NoSQL}.
 
 \subsection{Persistência Poliglota}
 \label{subsec:polyglotpersitence}
-Utilizar o NoSQL como base e fazer a comparaçao com o artigo de paradigma de programação
+Diferentes bancos de dados foram desenhados para resolver diferentes problemas \cite{NoSQL}. Conseguir identificar diferentes problemas dentro de uma aplicação pode ser um indicativo que mais de um banco de dados deve ser utilizado. Da mesma maneira que diferentes paradigmas de linguagem de programação são utilizados em um desenvolvimento \textit{web}, diferentes gêneros de banco de dados podem ser usado em uma mesma aplicação \cite{multiparadigma}
+
+
+

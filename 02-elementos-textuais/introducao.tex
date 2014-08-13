@@ -20,10 +20,9 @@ O segundo banco que iremos utilizar se chama \ac{Redis} do gênero chave-valor. 
 \label{sec:motivacao}
 A persistência poliglota é uma alternativa para melhorar o desempenho de uma aplicação. Utilizando-a conseguimos adaptar cada tipo de problema com um gênero de banco de dados.
 
-Exitem duas variáveis opostas no ambiente de persistência de dados, consistência e disponibilidade. Quanto mais consistente um dado, menos disponível ele será e quanto mais disponível um dado menos consistente ele estará. Em aplicações é comum termos um conjunto de dados que devem ser sempre consistentes e um outro conjunto de dados que devem estar sempre disponíveis. Logo, para atender a esses conjuntos de dados devem ser utilizados dois banco de dados, um que garante disponibilidade e outro que garante  consistência. Com esse ambiente misto é esperado que haja um ganho de desempenho.
+Exitem duas variáveis opostas no ambiente de persistência de dados, consistência e disponibilidade. Quanto mais consistente um dado, menos disponível ele será e quanto mais disponível um dado menos consistente ele estará. Em aplicações é comum termos um conjunto de dados que deve ser sempre consistente e um outro conjunto de dados que deve estar sempre disponível. Logo, para atender a esses conjuntos de dados devem ser utilizados dois banco de dados, um que garante disponibilidade e outro que garante  consistência. Utilizando esse ambiente misto é esperado que haja um ganho de desempenho.
 
 Atualmente poucos trabalhos apresentam uma comparação entre sistemas que utilizam apenas um banco, sistema monoglota,  e sistemas que utilizam persistência poliglota.
-
 
 
 
