@@ -140,11 +140,11 @@ Na camada de modelos temos apenas duas classes, \verb|Tweet| e \verb|User|. A cl
 A classe \verb|Tweet| armazena identificador do próprio \textit{tweet}, data de criação, data da ultima atualização desse objeto, descrição do \textit{tweet} e o identificador do usuário que criou o \textit{tweet}. Não escolhemos usar agregação nessa relação, pois umas das principais perspectivas é visualizar os \verb|Tweets| de diferentes usuários. Nessa classe temos duas validações uma de presença do campo descrição e outra que limita o tamanho desse campo em cento e quarenta caracteres.
 
 A classe \verb|User| armazena o identificador do usuário, email, nome, uma série de campos usados para autenticação, data de criação do objeto, data da última modificação do objeto, lista de usuários seguidos e a lista de usuários seguidores. A classe \verb|User| tem três relacionamentos, um com \verb|Tweet| que já foi citado e dois autorrelacionamentos para armazenar a lista de usuários que seguem e que são seguidos. Esse autorrelacionamento no banco de dados orientado a documento funciona de uma maneira diferente do banco de dados relacional.
-Enquanto no modelo relacional é necessário criar uma nova tabela, no modelo não-relacional armazenamos apenas as listas com os identificadores dos usuários, pois é permitido valores multivalorados. Logo, basta armazenar os identificadores da relação em uma lista embutida no documento do usuário. Então temos uma lista que armazena os identificadores dos usuários que são seguidos e outra lista com os identificadores dos usuários que são seguidores.
+Enquanto no modelo relacional é necessário criar uma nova tabela, no modelo não-relacional armazenamos apenas as listas com os identificadores dos usuários, pois é permitido valores multivalorados. Logo, basta armazenar os identificadores da relação em uma lista embutida no documento do usuário. Então temos uma lista que armazena os identificadores dos usuários que são seguidos, chamada de \verb|following| e outra lista com os identificadores dos usuários que são seguidores, chamada de \verb|followers|.
 Essa classe tem três validações de presença: uma para o campo nome, outra para o campo email e a terceira para o campo de senha.
 
-Na camada de controle temos uma hierarquia conforme mostra a \autoref{fig:diagrama_controllers}. ApplicationController é a classe de controle que herda da classe do framework. Em seguida, temos o HomeController e Logged::BaseController que herda  da classe ApplicationController. HomeController é a classe responsável por implementar o controle das páginas de about e index. Já o Logged::BaseController é a classe responsável por carregar o layout do usuário logado e verificar a autenticidade do usuário.
-Abaixo do Logged:BaseController foram criadas mais duas classes: TweetsController e UsersController que implementam os controles de tweets e usuários respectivamente.
+Na camada de controle temos uma hierarquia conforme mostra a \autoref{fig:diagrama_controllers}. \verb|ApplicationController| é a classe de controle que herda da classe do \textit{framework}. Em seguida, temos o \verb|HomeController| e \verb|Logged::BaseController| que herda  da classe \verb|ApplicationController|. \verb|HomeController| é a classe responsável por implementar o controle das páginas de \verb|about| e \verb|index|. Já o \verb|Logged::BaseController| é a classe responsável por carregar o layout do usuário logado e verificar a autenticidade do usuário.
+Abaixo do \verb|Logged:BaseController| foram criadas mais duas classes: \verb|TweetsController| e \verb|UsersController| que implementam os controles de \textit{tweets} e usuários respectivamente.
 \begin{figure}[H]
     \centering
     \caption{Camada de controle}
@@ -153,25 +153,25 @@ Abaixo do Logged:BaseController foram criadas mais duas classes: TweetsControlle
     \label{fig:diagrama_controllers}
 \end{figure}
 
-Todas as listas são páginadas de trinta em trinta e antes de todas ações é executado uma consulta que carrega para variável \textit{current\_user} o usuário logado. Essa busca é feita pela gem Devise e é transparente para o desenvolvedor.
+Todas as listas são paginadas de trinta em trinta e antes de todas ações é executado uma consulta, no banco, que carrega para variável \verb|current_user| o usuário logado. Essa busca é feita pela \textit{gem} Devise e é transparente para o desenvolvedor.
 
-O controle de usuário implementa as ações index, followers, following, show, edit, update, follow e unfollow.
+O controle de usuário implementa as ações \verb|index|, \verb|followers|, \verb|following|, \verb|show|, \verb|edit|, \verb|update|, \verb|follow| e \verb|unfollow|.
 
-A ação index lista todos os usuários com exceção do usuário logado. Na página renderizada o usuário logado poderá seguir os usuários que ele ainda não segue, ou poderá parar de seguir os usuários que ele segue. É realizado apenas uma consulta para ler os usuários do sistema.
+A ação \verb|index| lista todos os usuários com exceção do usuário logado. Na página renderizada o usuário logado poderá seguir os usuários que ele ainda não segue, ou poderá parar de seguir os usuários que ele segue. É realizado apenas uma consulta para ler os usuários do sistema.
 
-A ação followers lista todos os usuários que seguem o usuário logado. Na página renderizada o usuário logado poderá seguir os usuários que ele ainda não segue, ou poderá parar de seguir os usuários que ele já segue. É realizado apenas uma consulta no banco de dados que busca todos os usuários que o usuário logado segue.
+A ação \verb|followers| lista todos os usuários que seguem o usuário logado. Na página renderizada, o usuário logado poderá seguir os usuários que ele ainda não segue, ou poderá parar de seguir os usuários que ele já segue. É realizado apenas uma consulta no banco de dados que busca todos os usuários que o usuário logado segue.
 
-A ação followings lista todos os usuários que o usuário logado segue. Na página renderizada o usuário logado poderá parar de seguir os usuários que ele segue. Da mesma maneira que a ação followers, é realizado apenas uma consulta, porém busca os usuários que seguem o usuário logado.
+A ação \verb|followings| lista todos os usuários que o usuário logado segue. Na página renderizada, o usuário logado poderá parar de seguir os usuários que ele segue. Da mesma maneira que a ação \verb|followers|, é realizado apenas uma consulta, porém busca os usuários que seguem o usuário logado.
 
-A ação show recebe um id como parâmetro e exibe o usuário desse id. A página renderizada mostra o nome e email desse usuário e os tweets que ele fez. Nessa página são realizadas duas consultas, uma que busca o usuário e outra que busca os tweets desse usuário.
+A ação \verb|show| recebe um identificador como parâmetro e localiza o usuário que possui esse identificador. A página renderizada mostra o nome e email do usuário localizado e os tweets que ele fez. Nessa página são realizadas duas consultas, uma que busca o usuário e outra que busca os \textit{tweets} desse usuário.
 
-A ação edit renderiza o formulário de edição para que o usuário logado possa mudar algum campo dele, como nome, email ou senha. Nessa ação nenhuma consulta adicional é feita.
+A ação \verb|edit| renderiza o formulário de edição para que o usuário logado possa mudar algum campo, como nome, email ou senha. Nessa ação nenhuma consulta adicional é feita.
 
-A ação update recebe os parâmetros das alterações que o usuário fez no próprio perfil e registra isso no banco de dados. É realizado uma escrita no banco de dados para atualizar esses dados passados por parâmetros.
+A ação \verb|update| recebe os parâmetros das alterações que o usuário fez no próprio perfil e registra isso no banco de dados. É realizado uma escrita no banco de dados para atualizar esses dados passados por parâmetro.
 
-A ação follow recebe como parâmetro o usuário que será seguido pelo usuário logado e registra esse relacionamento. Para isso é necessário uma consulta para ler qual usuário será seguido e duas escritas: uma para atualizar o usuário que está sendo seguido com o id do usuário seguidor e outra para atualizar o usuário seguidor com o id do usuário seguido.
+A ação \verb|follow| recebe como parâmetro o usuário que será seguido pelo usuário logado e registra esse relacionamento. Para isso é necessário uma consulta para ler qual usuário será seguido e duas escritas: uma para atualizar o usuário que está sendo seguido com o identificador do usuário seguidor e outra para atualizar o usuário seguidor com o identificador do usuário seguido.
 
-A ação unfollow recebe como parâmetro o usuário que deixará de ser seguido pelo usuário logado e apaga o registro esse relacionamento. Para isso é necessário uma consulta para ler o usuário que deixará de ser seguido e duas escritas no banco de dados: uma para atualizar o usuário que deixou de ser seguido outra para atualizar o usuário seguidor que deixou de seguir.
+A ação \verb|unfollow| recebe como parâmetro o usuário que deixará de ser seguido pelo usuário logado e apaga o registro desse relacionamento. Para isso é necessário uma consulta para ler o usuário que deixará de ser seguido e duas escritas no banco de dados: uma para atualizar a lista de seguidores do usuário que deixou de ser seguido outra para atualizar a lista de seguindo do usuário seguidor que deixou de seguir.
 
 O controle de tweets implementa as ações feed, index, new, edit, update e destroy.
 
