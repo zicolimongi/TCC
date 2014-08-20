@@ -153,7 +153,8 @@ Abaixo do \verb|Logged:BaseController| foram criadas mais duas classes: \verb|Tw
     \label{fig:diagrama_controllers}
 \end{figure}
 
-Todas as listas são paginadas de trinta em trinta e antes de todas ações é executado uma consulta, no banco, que carrega para variável \verb|current_user| o usuário logado. Essa busca é feita pela \textit{gem} Devise e é transparente para o desenvolvedor.
+Toda consulta que resulte em mais de trinta registros são páginadas, isto é, colocamos um limite para que o banco não busque mais que 30 registros de uma só vez. Isso funciona manipulando duas variáveis \verb|offset| e \verb|limite|. Também devemos ressaltar que
+antes de todas ações é executado uma consulta, no banco, que carrega para variável \verb|current_user| o usuário logado, caso exista. Essa busca é feita pela \textit{gem} Devise e é transparente para o desenvolvedor.
 
 O controle de usuário implementa as ações \verb|index|, \verb|followers|, \verb|following|, \verb|show|, \verb|edit|, \verb|update|, \verb|follow| e \verb|unfollow|.
 
@@ -173,49 +174,51 @@ A ação \verb|follow| recebe como parâmetro o usuário que será seguido pelo 
 
 A ação \verb|unfollow| recebe como parâmetro o usuário que deixará de ser seguido pelo usuário logado e apaga o registro desse relacionamento. Para isso é necessário uma consulta para ler o usuário que deixará de ser seguido e duas escritas no banco de dados: uma para atualizar a lista de seguidores do usuário que deixou de ser seguido outra para atualizar a lista de seguindo do usuário seguidor que deixou de seguir.
 
-O controle de tweets implementa as ações feed, index, new, edit, update e destroy.
+O controle de \textit{tweets} implementa as ações \verb|feed|, \verb|index|, \verb|new|, \verb|edit|, \verb|update| e \verb|destroy|.
 
-A ação feed é responsável por fazer a busca no banco de dados dos tweets de todos os usuários que o usuário logado segue, ordenado pelos tweets mais recentes.
+A ação \verb|feed| é responsável por fazer a busca no banco de dados dos \textit{tweets} de todos os usuários que o usuário logado segue, ordenado-os pela da de criação de forma descendente, isto é, do \textit{tweet} mais recente para o mais antigo.
 
-A ação de index lista todos os tweets do usuário logado, para isso foi necessário fazer apenas uma consulta no banco de dados que busca esses tweets.
+A ação de \verb|index| lista todos os \textit{tweets} do usuário logado, para isso foi necessário fazer apenas uma consulta no banco de dados que busca esses \textit{tweets}.
 
-A ação new renderiza o formulário de cadastro de tweet, não é feito nehuma consulta adicional.
+A ação \verb|new| renderiza o formulário de cadastro de \textit{tweet}, não é feito nehuma consulta adicional.
 
-A ação create recebe como parâmetro o campo de descrição do tweet, relaciona esse tweet com o usuário logado e faz a escrita no banco desse tweet caso seja válido.
+A ação \verb|create| recebe como parâmetro o campo de descrição do \textit{tweet}, relaciona esse \textit{tweet} com o usuário logado e faz a escrita no desse no banco, caso seja válido.
 
-A ação update recebe como parâmetro o campo de descrição e o id do tweet que será alterado, faz a leitura no banco de dados desse tweet com o id passado. Em seguida, altera o valor da descrição e faz a escrita no banco de dados.
+A ação \verb|update| recebe como parâmetro o campo de descrição e o identificador do \textit{tweet} que será alterado, faz a leitura no banco de dados desse tweet com o identificador passado. Em seguida, altera o valor da descrição e faz a escrita no banco de dados.
 
-A ação destroy recebe como parâmetro o id do tweet que será excluído, em seguida faz a leitura desse tweet para verificar se o usuário logado é o dono do tweet e caso seja confirmado faz exclusão desse tweet no banco de dados.
-
+A ação \verb|destroy| recebe como parâmetro o identificador do \textit{tweet} que será excluído, em seguida faz a leitura desse \textit{tweet} para verificar se o usuário logado é o autor do \textit{tweet}e caso seja confirmado faz exclusão desse do banco de dados.
 
 
 \section{Implementação Poliglota}
 \label{sec:polyglot}
 
-Na aplicação monoglota a única maneira de consultar os tweets da feed é buscar todos os tweets, cujo o autor esteja na lista de followers do usuário logado. Para isso era necessário varrer tweet por tweet e verificar se o autor está na lista. Pensando nessa abordagem utilizamos a persistência poliglota para melhorar o tempo de leitura da feed.
-Então utilizamos um segundo banco de dados do gênero chave-valor, chamado \ac{Redis}, que irá armazenar os cem tweets mais recentes, cujo o autor está na lista de followers do usuário logado.
-O \ac{Redis} irá armazenar esses cem tweets em uma chave com o id do usuário concatenada com a string \"\_feed\", ou seja, o usuário que tem o id igual a um, a chave será \"1\_feed\". Todo usuário terá uma chave que armazenará os tweets da feed. Quando ele for acessar a página de feed, ao invés do sistema fazer a consulta no MongoDB e varrer tweet por tweet, ele irá apenas consultar o \ac{Redis} com a chave e será retornado o valor com todos os tweets da feed.
+Na aplicação monoglota a única maneira de consultar os \textit{tweets} na \verb|feed| é buscar todos os \textit{tweets}, cujo o autor esteja na lista de \verb|followers| do usuário logado. Para isso era necessário varrer \textit{tweet} por \textit{tweet} e verificar se o autor está na lista. Pensando nessa abordagem utilizamos a persistência poliglota para melhorar o tempo de leitura da \verb|feed| de \textit{tweets}.
+Então utilizamos um segundo banco de dados do gênero chave-valor, chamado \ac{Redis}, que irá armazenar os cem \textit{tweets} mais recentes, cujo o autor está na lista de \verb|followers| do usuário logado.
+O \ac{Redis} irá armazenar esses cem tweets em uma chave com o identificador do usuário concatenada com a string \"\_feed\", ou seja, o usuário que tem o identificador igual a um, a chave será \"1\_feed\". Todo usuário terá uma chave que armazenará os \textit{tweets} da \verb|feed|. Quando ele for acessar a página de \verb|feed|, ao invés do sistema fazer a consulta no MongoDB e varrer \textit{tweet} por \textit{tweet}, ele irá apenas consultar o \ac{Redis} com a chave e será retornado o valor com os cem \textit{tweets} mais recentes que o usuário logado segue.
 
 
-Para persistir esses dados no \ac{Redis} precisamos de alterar o sistema. Inicialmente foi necessário instalar outra gem, chamada redis \footnote{\url{https://github.com/antirez/redis}}, que faz a comunicação com o banco de dados chave-valor. Em seguida, implementamos três métodos na classe \verb|User|: feed\_key, remake\_feed e update\_tweet\_hash.
+Para persistir esses dados no \ac{Redis} precisamos de alterar o sistema. Inicialmente foi necessário instalar outra \textit{gem}, chamada redis \footnote{\url{https://github.com/antirez/redis}}, que faz a comunicação com o banco de dados chave-valor. Em seguida, implementamos três métodos na classe \verb|User|: \verb|feed_key|, \verb|remake_feed| e \verb|update_tweet_hash|.
 
-O método feed\_key foi criado apenas para retornar a chave que será usada para armazenar no \ac{Redis}.
+O método \verb|feed_key| foi criado apenas para retornar a chave que será usada para armazenar no \ac{Redis}.
 
-O método remake\_feed foi criado para refazer o valor da feed de algum usuário quando necessário. Após fazer a implementação poliglota, utilizamos esse método para popular o \ac{Redis}.
+O método \verb|remake_feed| foi criado para refazer o valor da \verb|feed| de algum usuário quando necessário. Após fazer a implementação poliglota, utilizamos esse método para popular o \ac{Redis}.
 
-O método update\_tweet\_hash foi implementado para adicionar mais um tweet na feed de tweets do usuário.
+O método \verb|update_tweet_hash| foi implementado para adicionar mais um \textit{tweet} na \verb|feed| de \textit{tweets} do usuário.
 
-Também precisamos adicionar três métodos na classe \verb|Tweet|: feed\_of, to\_redis\_json, update\_hash.
+Também precisamos adicionar três métodos na classe \verb|Tweet|: \verb|feed_of|, \verb|to_redis_json|,\verb|update_hash|.
 
-O método feed\_of é estático, pois irá trazer uma coleção de tweets. Esse método recebe como parâmetro um usuário, acessa o redis com a chave desse usuário e em seguida, faz um parse do valor lido, que foi armazenado como JSON, para aplicação.
+O método \verb|feed_of| é estático, pois irá trazer uma coleção de \textit{tweets}. Esse método recebe como parâmetro um usuário, acessa o redis com a chave desse usuário e em seguida, faz um parse do valor lido, que foi armazenado como JSON, para aplicação.
 
-O método to\_redis\_json é usado para converter o objeto tweet no formato JSON para que possa ser armazenado no \ac{Redis}.
+O método \verb|to_redis_json| é usado para converter o objeto \textit{tweet} no formato JSON para que possa ser armazenado no \ac{Redis}.
 
-Por fim, o terceiro método criado é o update\_hash, privado, que é responsável por atualizar todas as chaves com o tweet que foi criado. Esse método é executado por um \textit{callback}, chamado after\_create, com isso, toda a vez que for criado um tweet pela aplicação o método update\_hash será rodado.
+Por fim, o terceiro método criado é o \verb|update_hash|, privado, que é responsável por atualizar todas as chaves com o \textit{tweet} que foi criado. Esse método é executado por um \textit{callback}, chamado \verb|after_create|, com isso, toda a vez que for criado um \textit{tweet} pela aplicação o método \verb|update_hash| será rodado.
 
-Ainda foi necessário modificar o controle de tweet, para que a ação feed leia os tweets do \ac{Redis} e não do MongoDB.
+Ainda foi necessário modificar o controle de \textit{tweet}, para que a ação \verb|feed| leia os \textit{tweets} do \ac{Redis} e não do MongoDB.
 
-Algumas pequenas alterações foram necessárias, mas nenhuma que acrescente algum valor para o trabalho.
+Algumas outras pequenas alterações foram necessárias, mas nenhuma que acrescente algum valor para o trabalho.
+
+
+
 
 
 
