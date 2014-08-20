@@ -37,16 +37,16 @@ Os bancos de dados NoSQL têm as seguintes características: não usa o modelo r
 
 \subsection{Banco de dados Relacional}
 \label{subsec:relationaldatabasetype}
-O modelo relacional é o mais comum atualmente. Esse gênero armazena os dados em tabelas de duas dimensões em linhas e colunas. A interação com esse banco é feito por um \ac{SGBD} que utiliza o \ac{SQL} como linguagem de consulta de dados. Os dados armazenados são valores tipados e podem ser numéricos, texto, data e outros tipos, que são configurados e forçados pelo sistema. É possível fazer relações entre tabelas e cruzar informações de maneira simples. MySQL, Oracle e PostgreSQL são alguns exemplos de banco de dados relacional \cite{SDSW}.
+O modelo relacional armazena os dados em tabelas de duas dimensões em linhas e colunas. A interação com esse banco é feito por um \ac{SGBD} que utiliza o \ac{SQL} como linguagem de consulta de dados. Os dados armazenados são valores tipados e podem ser numéricos, texto, data e outros tipos, que são configurados e forçados pelo sistema. É possível fazer relações entre tabelas e cruzar informações de maneira simples. MySQL, Oracle e PostgreSQL são alguns exemplos de banco de dados relacional \cite{SDSW}.
 A representação do modelo relacional, pode ser feita com o diagrama \ac{UML}. Um sistema de \textit{e-commerce} poderia ser desenhado conforme o diagrama da \autoref{fig:diagrama_sql_uml} e os valores ficariam dispostos conforme \autoref{fig:disposicao_tabela}.
-\begin{figure}[!htb]
+\begin{figure}[H]
     \centering
     \caption{Exemplo de um diagrama \ac{UML} para o modelo relacional}
     \includegraphics[width=0.8\textwidth]{./04-figuras/diagrama_sql_uml.jpg}
     \fonte{\cite{NoSQL}}
     \label{fig:diagrama_sql_uml}
 \end{figure}
-\begin{figure}[!htb]
+\begin{figure}[H]
     \centering
     \caption{Exemplo da disposição dos dados no modelo relacional}
     \includegraphics[width=0.8\textwidth]{./04-figuras/disposicao_dados_tabela.png}
@@ -70,19 +70,19 @@ Basicamente os banco de dados NoSQL deslocam a definição do esquema para a apl
 
 Além dessa flexibilidade, a maioria dos gêneros NoSQL permitem estruturar dados multivalorados \footnote{O banco de dados orientado a nó, é um dos gêneros que não implementam agregação.}. Esses dados são modeladas como uma agregação, que é uma coleção de objetos relacionados que desejamos tratar como um único objeto \cite{domain-driven}. A agregação facilita a manipulação e a consistência desses dados, pois é tratado com uma unidade, ou seja, é lido e escrito, sempre, todo o conjunto de dados. Como, geralmente, ao utilizar esse relacionamento buscamos operações atomicas, essa abordagem se encaixa perfeitamente com a aplicação \cite{NoSQL}. A modelagem em \ac{UML} do mesmo exemplo anterior utilizando agregação, ficaria como a \autoref{fig:diagrama_no_sql_uml_simples} e a disposição de dados ficaria como a \autoref{fig:disposicao_json_simples} \footnote{É usual a utilização de JSON para mostrar os dados em NoSQL \cite{NoSQL}}.
 
-\begin{figure}[!htb]
+\begin{figure}[H]
     \centering
     \caption{Exemplo de um diagrama \ac{UML} utilizando agregação}
     \includegraphics[width=0.8\textwidth]{./04-figuras/diagrama_no_sql_uml_simples.jpg}
     \fonte{\cite{NoSQL}}
-    \label{fig:diagrama_sql_uml}
+    \label{fig:diagrama_no_sql_uml_simples}
 \end{figure}
-\begin{figure}[!htb]
+\begin{figure}[H]
     \centering
     \caption{Exemplo da disposição dos dados utilizando agregação}
     \includegraphics[width=0.8\textwidth]{./04-figuras/disposicao_json_simples.png}
     \fonte{\cite{NoSQL}}
-    \label{fig:disposicao_tabela}
+    \label{fig:disposicao_json_simples}
 \end{figure}
 
 
@@ -91,24 +91,24 @@ Nesse modelo, utilizamos duas agregações principais: cliente e pedido. O clien
 
 A ligação entre pedido e cliente é uma relação que ocorre da mesma maneira que o modelo relacional. O pedido mantém um identificador do cliente, mas também tem como utilizar a agregação para essa relação. O modelo em \ac{UML} ficaria como a \autoref{fig:diagrama_no_sql_uml_duplo} e os dados ficariam dispostos como a \autoref{fig:disposicao_json_duplo}.
 
-\begin{figure}[!htb]
+\begin{figure}[H]
     \centering
     \caption{Exemplo de um diagrama \ac{UML} para utilizando agregação entre cliente e pedido}
     \includegraphics[width=0.8\textwidth]{./04-figuras/diagrama_no_sql_uml_duplo.jpg}
     \fonte{\cite{NoSQL}}
-    \label{fig:diagrama_sql_uml}
+    \label{fig:diagrama_no_sql_uml_duplo}
 \end{figure}
-\begin{figure}[!htb]
+\begin{figure}[H]
     \centering
     \caption{Exemplo da disposição dos dados no NoSQL, utilizando agregação entre cliente e pedido}
     \includegraphics[width=0.8\textwidth]{./04-figuras/disposicao_json_duplo.png}
     \fonte{\cite{NoSQL}}
-    \label{fig:disposicao_tabela}
+    \label{fig:disposicao_json_duplo}
 \end{figure}
 
 Como na maioria dos problemas de modelamento não existe a melhor solução, mas sim uma que se adequa melhor para um certo tipo de problema, depende completamente da natureza da aplicação. Se for interessante para a aplicação listar o histórico dos pedidos, o segundo modelo, utilizando NoSQL, não é o ideal, pois será necessário entrar em cada usuário para ler os pedidos. Já no primeiro modelo, utilizando NoSQL, essa consulta do histótico se torna trivial \cite{NoSQL}.
 
-Outra razão para utilizar agregação é que isso facilita o uso do banco de dados em \textit{clusters}, pois isso informa ao sistema, quais \textit{bits} dos dados devem ser manipulados juntos e se devem estar no mesmo nó do \{cluster}.
+Outra razão para utilizar agregação é que isso facilita o uso do banco de dados em \textit{clusters}, pois isso informa ao sistema, quais \textit{bits} dos dados devem ser manipulados juntos e se devem estar no mesmo nó do \textit{cluster}.
 
 O modelo relacional por não tratar o conceito de agregação é chamado de \textit{aggregate-ignorant}. Apesar dessas vantagens apresentadas sobre agregação, o modelo relacional tem suas vantanges por não tratar. A principal é que ao utilizar o modelo relacional, podemos analisar os dados em diversas perspectivas, já no banco de dados NoSQL algumas consultas podem não ser triviais ou até mesmo mais lentas.
 
@@ -126,6 +126,5 @@ Existem dois tipos de relacionamento, um que funciona semelhante ao modelo relac
 \subsection{Persistência Poliglota}
 \label{subsec:polyglotpersitence}
 Diferentes bancos de dados foram desenhados para resolver diferentes problemas \cite{NoSQL}. Conseguir identificar diferentes problemas dentro de uma aplicação pode ser um indicativo que mais de um banco de dados deve ser utilizado. Da mesma maneira que diferentes paradigmas de linguagem de programação são utilizados em um desenvolvimento \textit{web}, diferentes gêneros de banco de dados podem ser usado em uma mesma aplicação \cite{multiparadigma}
-
 
 
