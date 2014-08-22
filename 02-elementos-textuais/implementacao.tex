@@ -1,10 +1,19 @@
-\section{Implementação}
-\label{sec:implementation}
-Para comparar os sistemas que utilizam apenas um banco de dados, persistência monoglota, com os sistemas que utilizam mais de um banco de dados, persistência poliglota, implementamos e testamos o desempenho desses.
+\chapter{Implementação}
+\label{chap:implementacao}
 
-Escolhemos fazer uma aplicação semelhante ao Twitter. Nessa aplicação o usuário poderá se cadastrar, escrever \textit{tweets}, seguir outros usuários e listar os \textit{tweets} dos usuários que ele segue. Para descrever essas funcionalidades segue os casos de uso abaixo:
+Para comparar os sistemas que utilizam apenas um banco de dados (persistência monoglota) com os sistemas que utilizam mais de um banco de dados (persistência poliglota) implementamos e testamos o desempenho desses.
 
-\textbf{Caso de Uso 1 - Cadastro do usuário}
+Escolhemos fazer uma aplicação semelhante ao Twitter. Nessa aplicação, o usuário poderá se cadastrar, escrever \textit{tweets}, seguir outros usuários e listar os \textit{tweets} dos usuários que ele segue.
+
+Este capítulo é dividido em duas seções, a primeira, \autoref{sec:useCase} descreve os casos de uso da aplicação. A \autoref{sec:applications} descreve os detalhes da implementação com persistência monoglota e com persistência poliglota.
+
+\section{Casos de Uso}
+\label{sec:useCase}
+Essa seção irá descrever os casos de uso da aplicação. Cinco subseções foram criadas para detalhar os cinco casos de uso criados. A primeira \autoref{subsec:useCaseCreateUser}, detalha o caso de uso que descreve a funcionalidade de cadastro do usuário. A \autoref{subsec:useCaseCreateTweet} descreve o caso de uso de cadastro de um \textit{tweet}. A \autoref{subsec:useCaseUserFollow} apresenta o caso de uso que descreve como o usuário segue outro usuário. A \autoref{subsec:useCaseUserUnfollow} apresenta o caso de uso que descreve como o usuário para de seguir outro e por fim, a \autoref{subsec:useCaseFeed} descreve o último caso de uso que detalha como o usuário visualiza a \textit{feed}, página que apresenta todos os \textit{tweets} dos usuários que o usuário logado segue.
+
+
+\subsection{Caso de Uso 1 - Cadastro do usuário}
+\label{subsec:useCaseCreateUser}
 
 Sumário: Usuário usa o sistema para se cadastrar
 
@@ -14,9 +23,7 @@ Ator secundário: Sistema
 
 Precondições: O usuário deverá ter uma email
 
-Fluxo Principal
-
-\begin{enumerate}
+Fluxo Principal\begin{enumerate}
 \item O usuário acessa o sistema
 \item O sistema exibe a tela de entrada
 \item O usuário clica em \textit{Sign up}
@@ -40,8 +47,8 @@ Fluxo de Exceção (5): Senha e confirmação de senha não conferem
 \item Se o usuário não preencher as senhas corretamente, o sistema retorna ao passo 5, informando que as senhas não conferem.
 \end{enumerate}
 
-
-\textbf{Caso de Uso 2 - Cadastro de \textit{tweet}}
+\subsection{Caso de Uso 2 - Cadastro de \textit{tweet}}
+\label{subsec:useCaseCreateTweet}
 
 Sumário: Usuário usa o sistema para cadastrar um \textit{tweet}
 
@@ -61,7 +68,9 @@ Fluxo Principal
 \item O sistema cria um novo \textit{tweet}, registrando que o usuário é o autor do \textit{tweet}, data e hora que foi criado
 \end{enumerate}
 
-\textbf{Caso de Uso 3 - Usuário segue outro usuário}
+
+\subsection{Caso de Uso 3 - Usuário segue outro usuário}
+\label{subsec:useCaseUserFollow}
 
 Sumário: Usuário segue outro usuário
 
@@ -81,7 +90,8 @@ Fluxo Principal
 \item O sistema armazena essa informação
 \end{enumerate}
 
-\textbf{Caso de Uso 4 - Usuário para de seguir algum usuário}
+\subsection{Caso de Uso 4 - Usuário para de seguir algum usuário}
+\label{subsec:useCaseUserUnfollow}
 
 Sumário: Usuário para de seguir algum usuário
 
@@ -101,7 +111,8 @@ Fluxo Principal
 \item O sistema armazena essa informação
 \end{enumerate}
 
-\textbf{Caso de Uso 5 - Usuário visualiza a \textit{feed}}
+\subsection{Caso de Uso 5 - Usuário visualiza a \textit{feed}}
+\label{subsec:useCaseFeed}
 
 Sumário: Usuário visualiza os \textit{tweets} dos usuários que ele segue
 
@@ -119,15 +130,21 @@ Fluxo Principal
 \item O sistema retorna a listagem paginada com todos os \textit{tweets} dos usuários que o ator primário segue.
 \end{enumerate}
 
+
+\section{Aplicações}
+\label{sec:applications}
+
 Ambos os sistemas foram desenvolvidos na linguagem \textit{ruby} com o \textit{framework rails}. Esse \textit{framework} é próprio para Web e utiliza a arquitetura de \textit{software} \ac{MVC}. Além disso, é uma ferramenta de desenvolvimento ágil, que facilita o desenvolvimento Web.
-Foram utilizado outras \textit{gems}, a lista utilizada em cada aplicação criada se encontra no arquivo chamado Gemfile.lock. Podemos destacar a gem Devise \footnote{\url{https://github.com/plataformatec/devise}} e a gem MongoId \footnote{\url{http://mongoid.org/}} como principais. A Devise faz o controle de sessão do usuário e a Mongoid deixa transparente para o desenvolvedor a comunicação com o banco de dados MongoDB. Também utilizamos a gem bootstrap-sass para melhorar usabilidade da aplicação.
+Foram utilizado outras \textit{gems} \footnote{\textit{Gem} é análogo a biblioteca nas outras linguagens}, a lista utilizada em cada aplicação criada se encontra no arquivo chamado Gemfile.lock. Podemos destacar a \textit{gem} Devise \footnote{\url{https://github.com/plataformatec/devise}} e a \textit{gem} MongoId \footnote{\url{http://mongoid.org/}} como principais. A Devise faz o controle de sessão do usuário e a Mongoid deixa transparente para o desenvolvedor a comunicação com o banco de dados MongoDB. Também utilizamos a \textit{gem} bootstrap-sass para melhorar usabilidade da aplicação.
 
-A diferença dos sistemas se descreve nas seções seguintes.
+Esta seção foi dividida em duas subseções. A \autoref{subsec:monoglot} descreve os detalhes de implementação do sistema monoglota. e a \autoref{subsec:polyglot}  descreve os detalhes da implementação poliglota.
 
-\section{Implementação Monoglota}
-\label{sec:monoglot}
+A seguir apresentamos os detalhes de implementação de cada sistema.
 
-Essa implementação utiliza apenas o banco de dados MongoDB que é orientado a documento.
+\subsection{Implementação Monoglota}
+\label{subsec:monoglot}
+
+Essa implementação utiliza apenas o banco de dados MongoDB que é orientado a documento. O código da aplicação está disponível no GitHub \footnote{\url{https://github.com/zicolimongi/Twitter-Mongo}}.
 
 Na camada de modelos temos apenas duas classes, \verb|Tweet| e \verb|User|. A classe \verb|Tweet| representa o \textit{tweet} e a classe \verb|User| representa o usuário. Ambos são armazenados como coleção no MongoDB. Cada objeto de uma dessas classes é um documento. Na \autoref{fig:diagrama_models} podemos visualizar o relacionamento entre as classes.
 \begin{figure}[H]
@@ -137,13 +154,13 @@ Na camada de modelos temos apenas duas classes, \verb|Tweet| e \verb|User|. A cl
     \fonte{\cite{NoSQL}}
     \label{fig:diagrama_models}
 \end{figure}
-A classe \verb|Tweet| armazena identificador do próprio \textit{tweet}, data de criação, data da ultima atualização desse objeto, descrição do \textit{tweet} e o identificador do usuário que criou o \textit{tweet}. Não escolhemos usar agregação nessa relação, pois umas das principais perspectivas é visualizar os \verb|Tweets| de diferentes usuários. Nessa classe temos duas validações uma de presença do campo descrição e outra que limita o tamanho desse campo em cento e quarenta caracteres.
+A classe \verb|Tweet| armazena identificador do próprio \textit{tweet}, data de criação, data da última atualização desse objeto, descrição do \textit{tweet} e o identificador do usuário que criou o \textit{tweet}. Não escolhemos usar agregação nessa relação, pois umas das principais perspectivas é visualizar os \verb|Tweets| de diferentes usuários. Nessa classe temos duas validações: uma de presença do campo descrição e outra que limita o tamanho desse campo em cento e quarenta caracteres.
 
 A classe \verb|User| armazena o identificador do usuário, email, nome, uma série de campos usados para autenticação, data de criação do objeto, data da última modificação do objeto, lista de usuários seguidos e a lista de usuários seguidores. A classe \verb|User| tem três relacionamentos, um com \verb|Tweet| que já foi citado e dois autorrelacionamentos para armazenar a lista de usuários que seguem e que são seguidos. Esse autorrelacionamento no banco de dados orientado a documento funciona de uma maneira diferente do banco de dados relacional.
 Enquanto no modelo relacional é necessário criar uma nova tabela, no modelo não-relacional armazenamos apenas as listas com os identificadores dos usuários, pois é permitido valores multivalorados. Logo, basta armazenar os identificadores da relação em uma lista embutida no documento do usuário. Então temos uma lista que armazena os identificadores dos usuários que são seguidos, chamada de \verb|following| e outra lista com os identificadores dos usuários que são seguidores, chamada de \verb|followers|.
 Essa classe tem três validações de presença: uma para o campo nome, outra para o campo email e a terceira para o campo de senha.
 
-Na camada de controle temos uma hierarquia conforme mostra a \autoref{fig:diagrama_controllers}. \verb|ApplicationController| é a classe de controle que herda da classe do \textit{framework}. Em seguida, temos o \verb|HomeController| e \verb|Logged::BaseController| que herda  da classe \verb|ApplicationController|. \verb|HomeController| é a classe responsável por implementar o controle das páginas de \verb|about| e \verb|index|. Já o \verb|Logged::BaseController| é a classe responsável por carregar o layout do usuário logado e verificar a autenticidade do usuário.
+Na camada de controle temos uma hierarquia de classes conforme mostra a \autoref{fig:diagrama_controllers}. \verb|ApplicationController| é a classe de controle que herda da classe do \textit{framework}. Em seguida, temos o \verb|HomeController| e \verb|Logged::BaseController| que herda  da classe \verb|ApplicationController|. \verb|HomeController| é a classe responsável por implementar o controle das páginas de \verb|about| e \verb|index|. Já o \verb|Logged::BaseController| é a classe responsável por carregar o layout do usuário logado e verificar a autenticidade do usuário.
 Abaixo do \verb|Logged:BaseController| foram criadas mais duas classes: \verb|TweetsController| e \verb|UsersController| que implementam os controles de \textit{tweets} e usuários respectivamente.
 \begin{figure}[H]
     \centering
@@ -156,15 +173,15 @@ Abaixo do \verb|Logged:BaseController| foram criadas mais duas classes: \verb|Tw
 Toda consulta que resulte em mais de trinta registros são páginadas, isto é, colocamos um limite para que o banco não busque mais que 30 registros de uma só vez. Isso funciona manipulando duas variáveis \verb|offset| e \verb|limite|. Também devemos ressaltar que
 antes de todas ações é executado uma consulta, no banco, que carrega para variável \verb|current_user| o usuário logado, caso exista. Essa busca é feita pela \textit{gem} Devise e é transparente para o desenvolvedor.
 
-O controle de usuário implementa as ações \verb|index|, \verb|followers|, \verb|following|, \verb|show|, \verb|edit|, \verb|update|, \verb|follow| e \verb|unfollow|.
+O controle de usuário implementa as ações \verb|index|, \verb|followers|, \verb|following|, \verb|show|, \verb|edit|, \verb|update|, \verb|follow| e \verb|unfollow|, todas descritas a seguir:
 
-A ação \verb|index| lista todos os usuários com exceção do usuário logado. Na página renderizada o usuário logado poderá seguir os usuários que ele ainda não segue, ou poderá parar de seguir os usuários que ele segue. É realizado apenas uma consulta para ler os usuários do sistema.
+A ação \verb|index| lista todos os usuários com exceção do usuário logado. Na página renderizada, o usuário logado poderá seguir os usuários que ele ainda não segue, ou poderá parar de seguir os usuários que ele segue. É realizado apenas uma consulta para ler os usuários do sistema.
 
 A ação \verb|followers| lista todos os usuários que seguem o usuário logado. Na página renderizada, o usuário logado poderá seguir os usuários que ele ainda não segue, ou poderá parar de seguir os usuários que ele já segue. É realizado apenas uma consulta no banco de dados que busca todos os usuários que o usuário logado segue.
 
 A ação \verb|followings| lista todos os usuários que o usuário logado segue. Na página renderizada, o usuário logado poderá parar de seguir os usuários que ele segue. Da mesma maneira que a ação \verb|followers|, é realizado apenas uma consulta, porém busca os usuários que seguem o usuário logado.
 
-A ação \verb|show| recebe um identificador como parâmetro e localiza o usuário que possui esse identificador. A página renderizada mostra o nome e email do usuário localizado e os tweets que ele fez. Nessa página são realizadas duas consultas, uma que busca o usuário e outra que busca os \textit{tweets} desse usuário.
+A ação \verb|show| recebe um identificador como parâmetro e localiza o usuário que possui esse identificador. A página renderizada mostra o nome e email do usuário localizado e os \textit{tweets} que ele fez. Nessa página, são realizadas duas consultas, uma que busca o usuário e outra que busca os \textit{tweets} desse usuário.
 
 A ação \verb|edit| renderiza o formulário de edição para que o usuário logado possa mudar algum campo, como nome, email ou senha. Nessa ação nenhuma consulta adicional é feita.
 
@@ -174,9 +191,9 @@ A ação \verb|follow| recebe como parâmetro o usuário que será seguido pelo 
 
 A ação \verb|unfollow| recebe como parâmetro o usuário que deixará de ser seguido pelo usuário logado e apaga o registro desse relacionamento. Para isso é necessário uma consulta para ler o usuário que deixará de ser seguido e duas escritas no banco de dados: uma para atualizar a lista de seguidores do usuário que deixou de ser seguido outra para atualizar a lista de seguindo do usuário seguidor que deixou de seguir.
 
-O controle de \textit{tweets} implementa as ações \verb|feed|, \verb|index|, \verb|new|, \verb|edit|, \verb|update| e \verb|destroy|.
+O controle de \textit{tweets} implementa as ações \verb|feed|, \verb|index|, \verb|new|, \verb|edit|, \verb|update| e \verb|destroy|, descritas a seguir:
 
-A ação \verb|feed| é responsável por fazer a busca no banco de dados dos \textit{tweets} de todos os usuários que o usuário logado segue, ordenado-os pela da de criação de forma descendente, isto é, do \textit{tweet} mais recente para o mais antigo.
+A ação \verb|feed| é responsável por fazer a busca no banco de dados dos \textit{tweets} de todos os usuários que o usuário logado segue, ordenado-os pela data de criação de forma descendente, isto é, do \textit{tweet} mais recente para o mais antigo.
 
 A ação de \verb|index| lista todos os \textit{tweets} do usuário logado, para isso foi necessário fazer apenas uma consulta no banco de dados que busca esses \textit{tweets}.
 
@@ -186,18 +203,18 @@ A ação \verb|create| recebe como parâmetro o campo de descrição do \textit{
 
 A ação \verb|update| recebe como parâmetro o campo de descrição e o identificador do \textit{tweet} que será alterado, faz a leitura no banco de dados desse tweet com o identificador passado. Em seguida, altera o valor da descrição e faz a escrita no banco de dados.
 
-A ação \verb|destroy| recebe como parâmetro o identificador do \textit{tweet} que será excluído, em seguida faz a leitura desse \textit{tweet} para verificar se o usuário logado é o autor do \textit{tweet}e caso seja confirmado faz exclusão desse do banco de dados.
+A ação \verb|destroy| recebe como parâmetro o identificador do \textit{tweet} que será excluído, em seguida faz a leitura desse \textit{tweet} para verificar se o usuário logado é o autor do \textit{tweet} e caso seja confirmado, faz exclusão desse do banco de dados.
 
 
-\section{Implementação Poliglota}
-\label{sec:polyglot}
+\subsection{Implementação Poliglota}
+\label{subsec:polyglot}
 
-Na aplicação monoglota a única maneira de consultar os \textit{tweets} na \verb|feed| é buscar todos os \textit{tweets}, cujo o autor esteja na lista de \verb|followers| do usuário logado. Para isso era necessário varrer \textit{tweet} por \textit{tweet} e verificar se o autor está na lista. Pensando nessa abordagem utilizamos a persistência poliglota para melhorar o tempo de leitura da \verb|feed| de \textit{tweets}.
-Então utilizamos um segundo banco de dados do gênero chave-valor, chamado \ac{Redis}, que irá armazenar os cem \textit{tweets} mais recentes, cujo o autor está na lista de \verb|followers| do usuário logado.
-O \ac{Redis} irá armazenar esses cem tweets em uma chave com o identificador do usuário concatenada com a string \"\_feed\", ou seja, o usuário que tem o identificador igual a um, a chave será \"1\_feed\". Todo usuário terá uma chave que armazenará os \textit{tweets} da \verb|feed|. Quando ele for acessar a página de \verb|feed|, ao invés do sistema fazer a consulta no MongoDB e varrer \textit{tweet} por \textit{tweet}, ele irá apenas consultar o \ac{Redis} com a chave e será retornado o valor com os cem \textit{tweets} mais recentes que o usuário logado segue.
+Na aplicação monoglota a única maneira de consultar os \textit{tweets} na \verb|feed| é buscar todos os \textit{tweets}, cujos o autores estejam na lista de \verb|followers| do usuário logado. Para isso, era necessário varrer \textit{tweet} por \textit{tweet} e verificar se o autor está na lista. Pensando nessa abordagem utilizamos a persistência poliglota para melhorar o tempo de leitura da \verb|feed| de \textit{tweets}.
+Então utilizamos um segundo banco de dados, do gênero chave-valor, chamado \ac{Redis}, que armazena os cem \textit{tweets} mais recentes, cujos o autores estão na lista de \verb|followers| do usuário logado.
+O \ac{Redis} irá armazenar esses cem \textit{tweets} em uma chave com o identificador do usuário concatenada com a string \verb|"_feed"| , ou seja, o usuário que tem o identificador igual a um, a chave será \verb|"1_feed"| . Todo usuário terá uma chave que armazenará os \textit{tweets} da \verb|feed|. Quando ele for acessar a página de \verb|feed|, ao invés do sistema fazer a consulta no MongoDB e varrer \textit{tweet} por \textit{tweet}, ele irá apenas consultar o \ac{Redis} com a chave e será retornado o valor com os cem \textit{tweets} mais recentes que o usuário logado segue.
 
 
-Para persistir esses dados no \ac{Redis} precisamos de alterar o sistema. Inicialmente foi necessário instalar outra \textit{gem}, chamada redis \footnote{\url{https://github.com/antirez/redis}}, que faz a comunicação com o banco de dados chave-valor. Em seguida, implementamos três métodos na classe \verb|User|: \verb|feed_key|, \verb|remake_feed| e \verb|update_tweet_hash|.
+Para persistir esses dados no \ac{Redis}, precisamos alterar o sistema na camada de controle e na camada de modelo. Inicialmente foi necessário instalar outra \textit{gem}, chamada redis \footnote{\url{https://github.com/antirez/redis}}, que faz a comunicação com o banco de dados chave-valor. Em seguida, implementamos três métodos na classe \verb|User|: \verb|feed_key|, \verb|remake_feed| e \verb|update_tweet_hash|, descritos a seguir:
 
 O método \verb|feed_key| foi criado apenas para retornar a chave que será usada para armazenar no \ac{Redis}.
 
@@ -205,7 +222,7 @@ O método \verb|remake_feed| foi criado para refazer o valor da \verb|feed| de a
 
 O método \verb|update_tweet_hash| foi implementado para adicionar mais um \textit{tweet} na \verb|feed| de \textit{tweets} do usuário.
 
-Também precisamos adicionar três métodos na classe \verb|Tweet|: \verb|feed_of|, \verb|to_redis_json|,\verb|update_hash|.
+Também precisamos adicionar três métodos na classe \verb|Tweet|: o método \verb|feed_of|, \verb|to_redis_json|,\verb|update_hash|.
 
 O método \verb|feed_of| é estático, pois irá trazer uma coleção de \textit{tweets}. Esse método recebe como parâmetro um usuário, acessa o redis com a chave desse usuário e em seguida, faz um parse do valor lido, que foi armazenado como JSON, para aplicação.
 
@@ -214,8 +231,6 @@ O método \verb|to_redis_json| é usado para converter o objeto \textit{tweet} n
 Por fim, o terceiro método criado é o \verb|update_hash|, privado, que é responsável por atualizar todas as chaves com o \textit{tweet} que foi criado. Esse método é executado por um \textit{callback}, chamado \verb|after_create|, com isso, toda a vez que for criado um \textit{tweet} pela aplicação o método \verb|update_hash| será rodado.
 
 Ainda foi necessário modificar o controle de \textit{tweet}, para que a ação \verb|feed| leia os \textit{tweets} do \ac{Redis} e não do MongoDB.
-
-Algumas outras pequenas alterações foram necessárias, mas nenhuma que acrescente algum valor para o trabalho.
 
 
 
