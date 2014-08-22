@@ -71,7 +71,6 @@
 \renewcommand{\folhadeaprovacaoname}{Folha de Aprova\c{c}\~ao}
 \addto\captionsbrazil{%
     % Ajusta nomes padrões do babel
-    \renewcommand{\listadesiglasname}{Lista de Abreviaturas e Siglas}
     \renewcommand{\listadesimbolosname}{Lista de S\'imbolos}
     \renewcommand{\listfigurename}{Lista de Figuras}
     \renewcommand{\listtablename}{Lista de Tabelas}
@@ -83,6 +82,7 @@
     \renewcommand{\paragraphautorefname}{Subse{\c c}\~ao}
 }
 \newcommand{\listofquadrosname}{Lista de Quadros}
+\newcommand{\listofsiglasname}{Lista de Siglas}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -236,6 +236,15 @@
 \counterwithout{quadro}{chapter}
 \renewcommand{\cftquadroname}{\quadroname\space}
 \renewcommand*{\cftquadroaftersnum}{\hfill--\hfill}
+
+\newcommand{\siglaname}{Sigla}
+\newfloat[chapter]{sigla}{loq}{\siglaname}
+\newlistof{listofsiglas}{loq}{\listofsiglasname}
+\newlistentry{sigla}{loq}{0}
+
+\counterwithout{sigla}{chapter}
+\renewcommand{\cftsiglaname}{\siglaname\space}
+\renewcommand*{\cftsiglaaftersnum}{\hfill--\hfill}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

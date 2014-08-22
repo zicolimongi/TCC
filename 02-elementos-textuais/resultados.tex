@@ -3,13 +3,15 @@
 
 Para demostrar os resultados preliminares utilizamos a \textit{gem} rack-mini-profiler. Essa \textit{gem} mede o tempo total que a aplicação leva para renderizar a página. Sabemos que o alvo deste trabalho é o tempo gasto nas consultas do banco de dados, mas essa ferramenta auxiliou para confirmarmos o melhor desempenho da implementação com persistência poliglota.
 
-Os teste foram realizados na máquina Asus, modelo N82J\footnote{A especificação se encontra no sítio da Asus \url{http://www.asus.com/Notebooks_Ultrabooks/N82Jq/}}, porém nessa márquina foi adicionado mais 4GB de RAM e o sistema operacional é Ubuntu 14.04 LTS.
+Os testes foram realizados na máquina Asus, modelo N82J\footnote{A especificação se encontra no sítio da Asus \url{http://www.asus.com/Notebooks_Ultrabooks/N82Jq/}}, porém foi adicionado, nessa máquina, mais 4GB de RAM e o sistema operacional é Ubuntu 14.04 LTS.
 
-A modelo de persistência poliglota tinha como alvo melhorar o desempenho da página \verb|feed|, mas sabemos que para isso a escrita do \textit|tweet| iria ser mais lenta. Para fazer um teste, no qual esses tempos medidos resultassem em uma diferença significativa populamos o banco de dados MongoDB com mil usuários e cada usuário com cem \textit{tweets}, totalizando em um total de cem mil \textit{tweets}.
+O modelo de persistência poliglota tinha como alvo melhorar o desempenho da página \verb|feed|, mas sabemos que para isso a escrita do \textit{tweet} iria ser mais lenta. Para fazer um teste, no qual esses tempos medidos resultassem em uma diferença significativa populamos o banco de dados MongoDB com mil usuários e cada usuário com cem \textit{tweets}, totalizando em  cem mil \textit{tweets}. Outra informação importante é que cada usuário segue outros dez usuários.
 
-Executamos as açõe \verb|feed| e cadastro de \textit{tweet} cem vezes para cada aplicação.
+Executamos as ações \verb|feed| e cadastro de \textit{tweet} cem vezes para cada aplicação.
 
 A média de resultados encontrados pode ser visualizado na \autoref{tab:tempo}
 \input{./05-tabelas/tabtempo}
 
-Como esperado a página \verb|feed| teve um grande ganho de performance utilizando a persistência poliglota, mas o cadastro de \textit{tweet} ficou mais lento. Esses resultados são simples, apenas para provar que pode haver melhora utilizando persistência poliglota, mas uma análise mais profunda é necessária inclusive aumentando o volume de dados para visualizar a reação do sistema.
+Como esperado a página \verb|feed| teve um grande ganho de performance utilizando a persistência poliglota, mas o cadastro de \textit{tweet} ficou mais lento. Esses resultados são simples, mas serve para provar que pode haver melhora utilizando persistência poliglota, mas uma análise mais profunda é necessária inclusive aumentando o volume de dados para visualizar a reação do sistema.
+
+
