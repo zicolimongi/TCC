@@ -1,17 +1,45 @@
-\chapter{Resultados Preliminares}
+\chapter{Resultados}
 \label{chap:resultados}
+Este capítulo irá mostrar os resultados da comparação dos sistemas criados, um que utiliza a persistência monoglota e outro que utiliza a persistência poliglota. O modelo de persistência poliglota tinha como alvo melhorar o desempenho da página \verb|feed|, mas sabemos que para isso a escrita do \textit{tweet} iria ser mais lenta. Pois, ao usuário publicar o \textit{tweet} é necessário atualizar a \textit{feed} de todos os seguidores desse usuário. Então iremos comparar o tempo de consulta da \textit{feed} de \textit{tweets} e o tempo de inserção de um \textit{tweet}. 
 
-Para demostrar os resultados preliminares utilizamos a \textit{gem} rack-mini-profiler. Essa \textit{gem} mede o tempo total que a aplicação leva para renderizar a página. Sabemos que o alvo deste trabalho é o tempo gasto nas consultas do banco de dados, mas essa ferramenta auxiliou para confirmarmos o melhor desempenho da implementação com persistência poliglota.
+O capítulo foi dividido em três seções, a \autoref{sec:resultFeed} que descreve como foram feito os testes para medir tempo de consulta da \textit{feed} de \textit{tweets}, a \autoref{sec:resultInsertTweet} descreve como foram feito os testes para medir o tempo de inserção de um \textit{tweet} e a \autoref{sec:resultEval} irá analisar os resultados encontrados.
+
+Para medir o tempo das operações utilizamos uma classe do próprio \textit{Ruby}, chamada \textit{Benchmark} \footnote{A documentação da classe Benchmark. \url{http://www.ruby-doc.org/stdlib-2.0/libdoc/benchmark/rdoc/Benchmark.html}}. Dessa classe utilizamos o método chamado \textit{measure} que mede o tempo de execução. Esse tempo medido está incluído o tempo da operação no banco de dados e o tempo do carregamento dos valores para as variáveis do sistema.
 
 Os testes foram realizados na máquina Asus, modelo N82J\footnote{A especificação se encontra no sítio da Asus \url{http://www.asus.com/Notebooks_Ultrabooks/N82Jq/}}, porém foi adicionado, nessa máquina, mais 4GB de RAM e o sistema operacional é Ubuntu 14.04 LTS.
 
-O modelo de persistência poliglota tinha como alvo melhorar o desempenho da página \verb|feed|, mas sabemos que para isso a escrita do \textit{tweet} iria ser mais lenta. Para fazer um teste, no qual esses tempos medidos resultassem em uma diferença significativa populamos o banco de dados MongoDB com mil usuários e cada usuário com cem \textit{tweets}, totalizando em  cem mil \textit{tweets}. Outra informação importante é que cada usuário segue outros dez usuários.
 
-Executamos as ações \verb|feed| e cadastro de \textit{tweet} cem vezes para cada aplicação.
+\section{Resultados do tempo de consulta da \textit{feed} de \textit{tweets}}
+\label{sec:resultFeed}
 
-A média de resultados encontrados pode ser visualizado na \autoref{tab:tempo}
-\input{./05-tabelas/tabtempo}
+Para fazer um teste, no qual esses tempos medidos resultassem em uma diferença significativa criamos quatro bancos de dados do MongoDB. Esses bancos foram populados com cem usuários, porém a diferença entre os bancos foi a quantidade de \textit{tweets} de cada usuário. No primeiro banco de dados foi adicionado dez \textit{tweets} para cada usuário, totalizando em mil \textit{tweets}, no segundo foram adicionados cem \textit{tweets} para cada usuário, totalizando em dez mil \textit{tweets}, no terceiro banco foram adicionados mil \textit{tweets} para cada usuário totalizando em cem mil \textit{tweets} e, por último, foram adicionados, no quarto banco de dados, dez mil \textit{tweets} para cada usuário, totalizando em um milhão de \textit{tweets}.
 
-Como esperado a página \verb|feed| teve um grande ganho de performance utilizando a persistência poliglota, mas o cadastro de \textit{tweet} ficou mais lento. Esses resultados são simples, mas serve para provar que pode haver melhora utilizando persistência poliglota, mas uma análise mais profunda é necessária inclusive aumentando o volume de dados para visualizar a reação do sistema.
+Alteramos o primeiro usuário para seguir todos os outros noventa e nove usuários e executamos o método \verb|remake_feed| da classe \verb|User| para criar a chave no \ac{Redis}.
+
+No modelo monoglota medimos o tempo de execução da seguinte função \verb|Tweet.in(user_id: user.following_ids).desc("created_at").paginate(:page => 1, :per_page => 100)|. Essa função irá buscar os cem \textit{tweets} mais recentes que o usuário atribuído ao objeto \textit{user} segue. Repetimos isso cem vezes para cada banco de dados, que havíamos populado. Segue abaixo a tabela com esses resultados:
+
+
+
+No modelo poliglota medimos o tempo de execução da seguinte função \verb|Tweet.feed_of user| que busca no \ac{Redis} a chave do usuário \textit{user} que contém os cem \textit{tweets} mais recentes que esse usuário segue. Também medimos cem vezes para cada banco de dados, que havíamos populado. Segue abaixo a tabela com esses resultados:
+
+
+\section{Resultados do tempo de inserção de um \textit{tweet}}
+\label{sec:resultInsertTweet}
+Na implementação poliglota a cada \textit{tweet} inserido por um usuário, a chave de todos os seguidores é refeita no \ac{Redis}. Logo, para ressaltar essa desvantagem populamos o banco de dados com dez mil e um usuários, cada um com cem \textit{tweets}, totalizando mais que um milhão de \textit{tweets}. 
+
+Utilizamos o último usuário criado para realizar os testes. Alteramos a quantidade de seguidores desse usuário para comparar o quanto isso irá impactar no resultado. Testamos com cem, mil, e dez mil seguidores e repetimos esse teste cem vezes para cada conjunto. Para medir o tempo de inserção em ambos os sistemas utilizamos a mesma função. A diferença da implementação poliglota é que foi criado um \textit{call back} que é executado após o \textit{tweet} ser criado. Esse \textit{call back} realiza uma operação de leitura e outra de escrita no \ac{Redis} para cada seguidor. Os resultados seguem descrito na tabela abaixo:
+
+
+
+
+\section{Análise dos resultados}
+\label{sec:resultEval}
+
+Para a implementação monoglota tivemos piores resultados na consulta a \textit{feed} de \textit{tweets}. A média aumentou significativamente quando a quantidade de \textit{tweets} no banco foram aumentados. Isso era esperado acontecer, pois para o banco encontrar os documentos procurados, foi necessário percorrer todos os \textit{tweets} e comparar com os parâmetros passados na consulta.
+Já para a implementação poliglota, o tempo de execução para as diferentes quantidades de \textit{tweets} foram muito próximos, pois a consulta é apenas para buscar a chave, não há nenhuma outra comparação ou leitura a ser feita.
+Com isso, podemos observar que tivemos uma melhora significativa, pois em nenhum momento a consulta a \textit{feed} de \textit{tweets} de um usuário foi mais rápida no sistema monoglota.
+
+Em relação aos resultados do tempo de inserção do \textit{tweet}, podemos observar que em nenhum instante a implementação poliglota foi mais rápida. Isso é devido ao tempo que foi gasto para atualizar as chaves. O aumento de seguidores foi proporcional com o aumento do tempo, ou seja, se aumentarmos em dez vezes os seguidores o tempo de atualização das chaves será dez vezes maior.
+Isso porque precisamos de fazer uma leitura e uma escrita para cada chave ser atualizada. Já para a implementação monoglota não houve diferença, pois a inserção de um \textit{tweet} não depende da quantidade de seguidores.
 
 

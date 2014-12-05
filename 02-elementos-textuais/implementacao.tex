@@ -241,16 +241,16 @@ Abaixo do \verb|Logged:BaseController| foram criadas mais duas classes: \verb|Tw
     \label{fig:diagrama_controllers}
 \end{figure}
 
-Toda consulta que resulte em mais de trinta registros são paginadas, isto é, colocamos um limite para que o banco não busque mais que 30 registros de uma só vez. Isso funciona manipulando duas variáveis \verb|offset| e \verb|limite|. Também devemos ressaltar que
+Toda consulta que resulte em mais de trinta registros são paginadas, isto é, colocamos um limite para que o banco não busque mais que 30 registros de uma só vez. Isso funciona manipulando duas variáveis \verb|offset| e \verb|limit|. Também devemos ressaltar que
 antes de todas ações é executado uma consulta, no banco, que carrega para variável \verb|current_user| o usuário logado, caso exista. Essa busca é feita pela \textit{gem} Devise e é transparente para o desenvolvedor.
 
 O controle de usuário implementa as ações \verb|index|, \verb|followers|, \verb|following|, \verb|show|, \verb|edit|, \verb|update|, \verb|follow| e \verb|unfollow|, todas descritas a seguir:
 
-A ação \verb|index| lista todos os usuários com exceção do usuário logado. Na página renderizada, o usuário logado poderá seguir os usuários que ele ainda não segue, ou poderá parar de seguir os usuários que ele segue. É realizado apenas uma consulta para ler os usuários do sistema.
+A ação \verb|index| lista todos os usuários com exceção do usuário logado. Na página renderizada, o usuário logado poderá seguir os usuários que ele ainda não segue, ou poderá parar de seguir os usuários que ele segue. É realizado uma consulta para ler os usuários do sistema.
 
-A ação \verb|followers| lista todos os usuários que seguem o usuário logado. Na página renderizada, o usuário logado poderá seguir os usuários que ele ainda não segue, ou poderá parar de seguir os usuários que ele já segue. É realizado apenas uma consulta no banco de dados que busca todos os usuários que o usuário logado segue.
+A ação \verb|followers| lista todos os usuários que seguem o usuário logado. Na página renderizada, o usuário logado poderá seguir os usuários que ele ainda não segue, ou poderá parar de seguir os usuários que ele já segue. É realizado uma consulta no banco de dados que busca todos os usuários que o usuário logado segue.
 
-A ação \verb|followings| lista todos os usuários que o usuário logado segue. Na página renderizada, o usuário logado poderá parar de seguir os usuários que ele segue. Da mesma maneira que a ação \verb|followers|, é realizado apenas uma consulta, porém busca os usuários que seguem o usuário logado.
+A ação \verb|followings| lista todos os usuários que o usuário logado segue. Na página renderizada, o usuário logado poderá parar de seguir os usuários que ele segue. Da mesma maneira que a ação \verb|followers| é realizado uma consulta, porém busca os usuários que seguem o usuário logado.
 
 A ação \verb|show| recebe um identificador como parâmetro e localiza o usuário que possui esse identificador. A página renderizada mostra o nome e email do usuário localizado e os \textit{tweets} que ele fez. Nessa página, são realizadas duas consultas, uma que busca o usuário e outra que busca os \textit{tweets} desse usuário.
 
@@ -266,7 +266,7 @@ O controle de \textit{tweets} implementa as ações \verb|feed|, \verb|index|, \
 
 A ação \verb|feed| é responsável por fazer a busca no banco de dados dos \textit{tweets} de todos os usuários que o usuário logado segue, ordenado-os pela data de criação de forma descendente, isto é, do \textit{tweet} mais recente para o mais antigo.
 
-A ação de \verb|index| lista todos os \textit{tweets} do usuário logado, para isso foi necessário fazer apenas uma consulta no banco de dados que busca esses \textit{tweets}.
+A ação de \verb|index| lista todos os \textit{tweets} do usuário logado, para isso foi necessário fazer uma consulta no banco de dados que busca esses \textit{tweets}.
 
 A ação \verb|new| renderiza o formulário de cadastro de \textit{tweet}, não é feito nenhuma consulta adicional.
 
@@ -282,11 +282,11 @@ A ação \verb|destroy| recebe como parâmetro o identificador do \textit{tweet}
 
 Para fazer a aplicação com persistência poliglota foi feito uma cópia da aplicação com persistência monoglota e em seguida feito as alterações necessárias para que o segundo banco de dados fosse usado. O código da aplicação está disponível no GitHub\footnote{\url{https://github.com/zicolimongi/Twitter-Mongo-Redis}}.
 Na aplicação monoglota a única maneira de consultar os \textit{tweets} na \verb|feed| é buscar todos os \textit{tweets}, cujos o autores estejam na lista de \verb|followers| do usuário logado. Para isso, era necessário varrer \textit{tweet} por \textit{tweet} e verificar se o autor está na lista. Pensando nessa abordagem utilizamos a persistência poliglota para melhorar o tempo de leitura da \verb|feed| de \textit{tweets}.
-Então utilizamos um segundo banco de dados, do gênero chave-valor, chamado \ac{Redis}, que armazena os cem \textit{tweets} mais recentes, cujos o autores estão na lista de \verb|followers| do usuário logado.
+Então utilizamos um segundo banco de dados, do gênero chave-valor, chamado \ac{Redis}, que armazena os cem \textit{tweets} mais recentes, cujos autores estão na lista de \verb|followers| do usuário logado.
 O \ac{Redis} irá armazenar esses cem \textit{tweets} em uma chave com o identificador do usuário concatenada com a string \verb|"_feed"| , ou seja, o usuário que tem o identificador igual a um, a chave será \verb|"1_feed"| . Todo usuário terá uma chave que armazenará os \textit{tweets} da \verb|feed|. Quando ele for acessar a página de \verb|feed|, ao invés do sistema fazer a consulta no MongoDB e varrer \textit{tweet} por \textit{tweet}, ele irá apenas consultar o \ac{Redis} com a chave e será retornado o valor com os cem \textit{tweets} mais recentes que o usuário logado segue.
 
 
-Para persistir esses dados no \ac{Redis}, precisamos alterar o sistema na camada de controle e na camada de modelo. Inicialmente foi necessário instalar outra \textit{gem}, chamada redis \footnote{\url{https://github.com/antirez/redis}}, que faz a comunicação com o banco de dados chave-valor. Em seguida, implementamos três métodos na classe \verb|User|: \verb|feed_key|, \verb|remake_feed| e \verb|update_tweet_hash|, descritos a seguir:
+Para persistir esses dados no \ac{Redis}, precisamos alterar o sistema na camada de controle e na camada de dados. Inicialmente foi necessário instalar outra \textit{gem}, chamada redis \footnote{\url{https://github.com/antirez/redis}}, que faz a comunicação com o banco de dados chave-valor. Em seguida, implementamos três métodos na classe \verb|User|: \verb|feed_key|, \verb|remake_feed| e \verb|update_tweet_hash|, descritos a seguir:
 
 O método \verb|feed_key| foi criado apenas para retornar a chave que será usada para armazenar no \ac{Redis}.
 
