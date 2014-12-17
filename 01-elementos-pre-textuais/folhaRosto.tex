@@ -20,27 +20,7 @@
 
     \vspace*{90pt}
 
-    \abntex@ifnotempty{\imprimirpreambulo}{%
-        \SingleSpacing
-        \begin{tabular}{p{.24\textwidth}p{.15\textwidth}p{.44\textwidth}}
-            & \multicolumn{2}{p{.6\textwidth}}{\small\hyphenpenalty=10000{\imprimirpreambulo}} \\ & & \\
-            \abntex@ifnotempty{\imprimirareaconcentracao}
-            {%
-                & \multicolumn{2}{p{.6\textwidth}}{\small\hyphenpenalty=10000{\imprimirareaconcentracaoRotulo\imprimirareaconcentracao}} \\ & & \\
-            }
-            \abntex@ifnotempty{\imprimirlinhapesquisa}
-            {%
-                & \multicolumn{2}{p{.6\textwidth}}{\small\hyphenpenalty=10000{\imprimirlinhapesquisaRotulo\imprimirlinhapesquisa}} \\ & & \\
-            }
-            & \small\imprimirorientadorRotulo & \imprimirorientador \\
-            & & \small\imprimirinstOrientador \\ & & \\
-            \abntex@ifnotempty{\imprimircoorientador}
-            {%
-                & \small\imprimircoorientadorRotulo & \imprimircoorientador \\
-                & & \small\imprimirinstCoorientador
-            }
-        \end{tabular}
-    }
+  
 
     \vspace*{\fill}
 
