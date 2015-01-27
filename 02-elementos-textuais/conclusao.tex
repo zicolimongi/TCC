@@ -1,10 +1,14 @@
 \chapter{Conclusão}
 \label{chap:conclusao}
 
-A persistência poliglota pode melhorar o desempenho da aplicação, mas o modelo deve ser bem estudado, para que haja uma melhora no sistema como um todo. Os resultados demonstram que a persistência poliglota melhorou parte do sistema, mas não o sistema como um todo.
+A persistência poliglota pode melhorar o desempenho da aplicação, por isso devemos estudar a aplicação para entender quais dos gêneros de bancos de dados devemos utilizar. Neste trabalho, utilizamos dois bancos de dados: \ac{Redis} que é do gênero chave-valor e MongoDB que é do gênero orientado a documento. O gênero chave-valor garante alta disponibilidade. Já o gênero orientado a documento permite uma maior flexibilidade na construção da aplicação, pois é possível utilizar agregação e registros com diferentes atributos.
 
-Para o funcionamento do Twitter o modelo utilizado não foi ideal, pois o tempo de inserção de um \textit{tweet} aumentou muito. Porém, é um modelo que funcionaria muito bem em aplicações que há uma grande quantidade de leitura e uma pequena quantidade de escrita.
+Ambos os bancos utilizados são chamados de NoSQL. Podemos definir como NoSQL bancos que foram desenhados para funcionar em \textit{clusters}, não utilizam o modelo relacional e não tem catálogo \cite{NoSQL}. Existem vantagens ao utilizar esses bancos, porém devemos conhecer a aplicação para definir qual gênero utilizar.
 
-Este trabalho apresentado é apenas um começo do estudo de persistência poliglota. Podemos fazer diferentes análises, como a quantidade de espaço utilizado, consistência das informações e outras para afirmar qual modelo é melhor. A próxima etapa seria aprofundar os testes realizados nas duas aplicações e em seguida colocar ambas em um ambiente paralelo.
+Conhecendo a aplicação, podemos definir não apenas um banco, mas vários. Em uma mesma aplicação podemos ter dados com características diferentes. Então podemos armazenar os dados com diferentes características em diferentes bancos, para termos um melhor desempenho. Chamamos de persistência monoglota aquele sistema que utiliza apenas um banco de dados e persistência poliglota aquele que utiliza mais de um banco de dados.
+
+Este trabalho teve como objetivo ilustrar a diferença das aplicações com persistência poliglota e monoglota, avaliando os benefícios que a persistência poliglota venha oferecer. Observamos que os resultados demonstram que a persistência poliglota melhorou parte do sistema, mas não o sistema como um todo. Para o funcionamento do Twitter o modelo utilizado não foi ideal, pois o tempo de inserção de um \textit{tweet} aumentou muito. Porém, é um modelo que funcionaria muito bem em aplicações que há uma grande quantidade de leitura e uma pequena quantidade de escrita.
+
+Este trabalho apresentado é apenas um começo do estudo de persistência poliglota. Como trabalho futuro, podemos fazer diferentes análises, como a quantidade de espaço utilizado, consistência das informações e outras para afirmar qual modelo é melhor. A próxima etapa seria aprofundar os testes realizados nas duas aplicações e em seguida colocar ambas em um ambiente paralelo.
 
 
