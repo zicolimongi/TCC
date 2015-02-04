@@ -1,3 +1,4 @@
+%!TEX root = /Users/andreherculano/Dropbox/TCC/projeto/v5/main.tex
 %
 % Documento: Folha de aprovação
 %
@@ -5,50 +6,49 @@
 \makeatletter
 \begin{folhadeaprovacao}
 
+	\begin{center}
+		\normalfont\scshape{\imprimirinstituicao}\\
+		\normalfont\scshape{\imprimirprograma}\\
+		Avaliação do Trabalho de Conclusão de Curso
+	\end{center}
+
+	\vspace*{50pt}
+
+    Aluno: \imprimirautor
+
+    Título do trabalho: Persistência Poliglota
+
+    Data da defesa: 22 de Janeiro de 2015
+
+    Horário: 10:00h
+
+    Local da defesa: CEFET-MG Campus II, prédio 17, sala 101
+
+    \vspace*{70pt}
+
     \begin{center}
-        {\large\normalfont\scshape\textbf\imprimirautor}
+        O presente Trabalho de Conclusão de Curso foi avaliado pela seguinte banca:
     \end{center}
 
-    \vspace*{50pt}
+    \vspace*{70pt}
 
     \begin{center}
-        \ABNTEXchapterfont\Large\scshape\imprimirtitulo
-        \abntex@ifnotempty{\imprimirsubtitulo}{%
-            {\ABNTEXchapterfont\Large\scshape: }{\ABNTEXchapterfont\large\scshape\imprimirsubtitulo}
-        }
-    \end{center}
+        \imprimirorientador  - Orientador \\
+        Departamento de Computação\\
+        Centro Federal de Educação Tecnológica de Minas Gerais
+        \vspace*{15pt}
 
-    \vspace*{60pt}
+        Profa. Dra. Anolan Yamilé Milanés Barrientos - Membro da banca de avaliação\\
+        Departamento de Computação\\
+        Centro Federal de Educação Tecnológica de Minas Gerais
+        \vspace*{15pt}
 
-    \abntex@ifnotempty{\imprimirpreambulo}{%
-        \SingleSpacing
-        \begin{tabular}{p{.24\textwidth}p{.15\textwidth}p{.44\textwidth}}
-            & \multicolumn{2}{p{.6\textwidth}}{\small\hyphenpenalty=10000{\imprimirpreambulo}} \\ & & \\
-        \end{tabular}
-    }
-
-    \vspace*{10pt}
-
-    \begin{center}
-        Trabalho aprovado. \imprimirlocal, 22 de janeiro de 2015
-    \end{center}
-
-    \begin{center}
-        \assinatura{\textbf{\imprimirorientador} \\ Orientador}
-        \assinatura{\textbf{Professor} \\ Anolan Yamilé Milanés Barrientos}
-        \assinatura{\textbf{Professor} \\ Bruno André Santos}
-        %\assinatura{\textbf{Professor} \\ Convidado 3}
-        %\assinatura{\textbf{Professor} \\ Convidado 4}
+        Prof. Bruno André Santos - Membro da banca de avaliação\\
+        Departamento de Computação\\
+        Centro Federal de Educação Tecnológica de Minas Gerais
     \end{center}
 
     \vspace*{\fill}
-
-    \begin{center}
-        \normalfont\scshape{\imprimirinstituicao}\\
-        \normalfont\scshape{\imprimirprograma}\\
-        \normalfont\scshape{\imprimirlocal}\\
-        \normalfont\scshape{\imprimirdata}
-    \end{center}
 
 \end{folhadeaprovacao}
 \makeatother
